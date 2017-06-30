@@ -1,0 +1,4 @@
+Host: worldofjarcraft.ddns.net bzw. localhost
+DB: KAPPA
+USER: KAPPA
+PW: bF#uWyy$3B!M
