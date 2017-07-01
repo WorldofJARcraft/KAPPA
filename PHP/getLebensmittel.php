@@ -30,14 +30,13 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
-	$sqlStmt = "SELECT * FROM `Fach` WHERE Kuehlschrank='".$nummer."' AND Name='".$_GET["name"]."'";
+	$sqlStmt = "SELECT lNummer FROM `Fach` WHERE Kuehlschrank='".$nummer."' AND Name='".$_GET["fach"]."'";
   //Abfrage vorbereiten
-  $result =  mysqli_query($connection,$sqlStmt);
-	$exists = false;  
+  $result =  mysqli_query($connection,$sqlStmt);  
   //wenn Ergebnisse...
   if ($result = $connection->query($sqlStmt)) {
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      $exists = empty($result->fetch_assoc()["lNummer"]);
+      $fach =$result->fetch_assoc()["lNummer"];
       }
       
   // Das Objekt wieder freigeben.
@@ -46,21 +45,20 @@ function neuerUser ($connection) {
   // Das Objekt wieder freigeben.
    //Ergebnisse leeren
 	$result->free();
-	if(!empty($nummer)&&$exists==true){
-	$sqlStmt = "INSERT INTO `KAPPA`.`Fach` (`lNummer`, `Kuehlschrank`, `Name`) VALUES (NULL, '".$nummer."', '".$_GET["name"]."');";
+	if(!empty($nummer)){
+	$sqlStmt = "SELECT Name, Anzahl, Haltbarkeitsdatum FROM `Lebensmittel` WHERE Fach='".$fach."'";
 	$result =  mysqli_query($connection,$sqlStmt);
-	if($result==true)
-		echo "Erfolg";
-	//keine Ergebnisse, die zu betrachten wären
-	}
-	else if($exists==false){
-		echo "Fach existiert schon: Operation nicht erlaubt.";
-	}
-	else if(empty($nummer))
-		echo"Kühlschrank nicht vorhanden: Operation nicht erlaubt.";
+	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
+  		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
+      echo $zeile["Name"].";".$zeile["Anzahl"].";".$zeile["Haltbarkeitsdatum"]."|"; 
+  }    
 	//Verbindung schließen
 	closeConnection($connection);
   
+}
+	else if(empty($nummer)){
+		echo "Fach existiert nicht: Operation nicht erlaubt.";
+	}
 }
   
 

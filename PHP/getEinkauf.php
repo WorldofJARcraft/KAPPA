@@ -10,6 +10,7 @@ if (mysqli_connect_errno()) {
     echo mysql_errno($connection) . ": " . mysql_error($connection). "\n";
     die();
 }
+//übergebene Zeit eintragen
 $auth = verify($connection);
 if($auth === "true")
 neuerUser($connection);
@@ -42,7 +43,6 @@ function verify ($connection) {
 	closeConnection($connection);
   
 }
-
 //trägt die aktuelle Zeit für die übergebene Startnummer in die gewählte Station ein.
 function neuerUser ($connection) {
 	//zuerst prüfen, ob Zeit schon vorhanden
@@ -53,49 +53,27 @@ function neuerUser ($connection) {
 	$sqlStmt = "SELECT EMail FROM `Benutzer` WHERE EMail='".$_GET["mail"]."';";
   //Abfrage vorbereiten
   $result =  mysqli_query($connection,$sqlStmt);
-	$exists = "false";  
+	$exists = false;  
   //wenn Ergebnisse...
   if ($result = $connection->query($sqlStmt)) {
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      if(empty($result->fetch_assoc()["EMail"])){}
-      else $exists = "true";
+      $exists = !empty($result->fetch_assoc()["EMail"]);
       }
-      echo $exists;
+      
+      
   // Das Objekt wieder freigeben.
    //Ergebnisse leeren
 	$result->free();
-	$sqlStmt = "SELECT * FROM `Kuehlschrank` WHERE Name='".$_GET["name"]."' AND Besitzer='".$_GET["mail"]."';";
-  //Abfrage vorbereiten
-  $result =  mysqli_query($connection,$sqlStmt);
-	$vorhanden = "false";  
-  //wenn Ergebnisse...
-  if ($result = $connection->query($sqlStmt)) {
-  		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      if(empty($result->fetch_assoc()["Besitzer"])){}
-      else {
-			$vorhanden = "true";       
-      }
-      }
-  echo $vorhanden;    
-  // Das Objekt wieder freigeben.
-   //Ergebnisse leeren
-	$result->free();
-	if($exists==="true"&&$vorhanden==="false"){
-	$sqlStmt = "INSERT INTO `KAPPA`.`Kuehlschrank` (`laufNummer`, `Name`, `Zahl_Faecher`, `Besitzer`) VALUES (NULL, '".$_GET["name"]."', '".$_GET["faecher"]."', '".$_GET["mail"]."');";
+	$sqlStmt = "SELECT Lebensmittel FROM `Einkauf` WHERE Benutzer='".$_GET["mail"]."'";
 	$result =  mysqli_query($connection,$sqlStmt);
-	if($result==true)
-		echo "Erfolg";
-	//keine Ergebnisse, die zu betrachten wären
-	}
-	else if($exists==false){
-		echo "User nicht vorhanden: Operation nicht erlaubt.";
-	}
-	else if($vorhanden==false)
-		echo"Kühlschrank schon vorhanden: Operation nicht erlaubt.";
+	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
+  		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
+      echo $zeile["Lebensmittel"]."|"; 
+  }
 	//Verbindung schließen
 	closeConnection($connection);
-  
-}
+  }
+
   
 
 //Verbindung schließen.
