@@ -10,9 +10,7 @@ if (mysqli_connect_errno()) {
     echo mysql_errno($connection) . ": " . mysql_error($connection). "\n";
     die();
 }
-//übergebene Zeit eintragen
 neuerUser($connection);
-
 //trägt die aktuelle Zeit für die übergebene Startnummer in die gewählte Station ein.
 function neuerUser ($connection) {
 	//zuerst prüfen, ob Zeit schon vorhanden
@@ -20,15 +18,15 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
-	$sqlStmt = "INSERT INTO `KAPPA`.`Benutzer` (`EMail`, `Passwort`) VALUES ('".$_GET["user"]."', '".$_GET["pw"]."');";
+	$sqlStmt = "DELETE FROM `Einkauf` WHERE Benutzer IS NULL;";
 	$result =  mysqli_query($connection,$sqlStmt);
-	if($result==true)
-		echo "Erfolg";
-	//keine Ergebnisse, die zu betrachten wären
-
-	//Verbindung schließen
+	$sqlStmt = "DELETE FROM `Kuehlschrank` WHERE Besitzer IS NULL;";
+	$result =  mysqli_query($connection,$sqlStmt);
+	$sqlStmt = "DELETE FROM `Fach` WHERE Kuehlschrank IS NULL;";
+	$result =  mysqli_query($connection,$sqlStmt);    
+  //Abfrage vorbereiten
+	
 	closeConnection($connection);
-  
 }
   
 

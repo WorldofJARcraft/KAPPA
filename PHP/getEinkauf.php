@@ -64,11 +64,11 @@ function neuerUser ($connection) {
   // Das Objekt wieder freigeben.
    //Ergebnisse leeren
 	$result->free();
-	$sqlStmt = "SELECT Lebensmittel FROM `Einkauf` WHERE Benutzer='".$_GET["mail"]."'";
+	$sqlStmt = "SELECT * FROM `Einkauf` WHERE Benutzer='".$_GET["mail"]."'";
 	$result =  mysqli_query($connection,$sqlStmt);
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      echo $zeile["Lebensmittel"]."|"; 
+      echo $zeile["Num"].";".$zeile["Lebensmittel"]."|"; 
   }
 	//Verbindung schließen
 	closeConnection($connection);

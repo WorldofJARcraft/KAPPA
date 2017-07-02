@@ -10,7 +10,6 @@ if (mysqli_connect_errno()) {
     echo mysql_errno($connection) . ": " . mysql_error($connection). "\n";
     die();
 }
-//übergebene Zeit eintragen
 $auth = verify($connection);
 if($auth === "true")
 neuerUser($connection);
@@ -43,6 +42,7 @@ function verify ($connection) {
 	closeConnection($connection);
   
 }
+
 //trägt die aktuelle Zeit für die übergebene Startnummer in die gewählte Station ein.
 function neuerUser ($connection) {
 	//zuerst prüfen, ob Zeit schon vorhanden
@@ -50,30 +50,13 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
-	$sqlStmt = "SELECT EMail FROM `Benutzer` WHERE EMail='".$_GET["mail"]."';";
+	$sqlStmt = "DELETE FROM `Einkauf` WHERE Num='".$_GET["id"]."'";
+	$result =  mysqli_query($connection,$sqlStmt);  
   //Abfrage vorbereiten
-  $result =  mysqli_query($connection,$sqlStmt);
-	$exists = false;  
-  //wenn Ergebnisse...
-  if ($result = $connection->query($sqlStmt)) {
-  		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      $exists = !empty($result->fetch_assoc()["EMail"]);
-      }
-      
-      
-  // Das Objekt wieder freigeben.
-   //Ergebnisse leeren
-	$result->free();
-	$sqlStmt = "SELECT Lebensmittel FROM `Einkauf` WHERE Benutzer='".$_GET["mail"]."'";
-	$result =  mysqli_query($connection,$sqlStmt);
-	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
-  		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      echo $zeile["Num"].";".$zeile["Lebensmittel"]."|"; 
-  }
-	//Verbindung schließen
+	if($result==true)
+		echo "Erfolg";
 	closeConnection($connection);
-  }
-
+}
   
 
 //Verbindung schließen.

@@ -46,12 +46,11 @@ function neuerUser ($connection) {
    //Ergebnisse leeren
 	$result->free();
 	if(!empty($nummer)){
-	$sqlStmt = "SELECT Name, Anzahl, Haltbarkeitsdatum FROM `Lebensmittel` WHERE Fach='".$fach."'";
+	$sqlStmt = "SELECT * FROM `Lebensmittel` WHERE Fach='".$fach."'";
 	$result =  mysqli_query($connection,$sqlStmt);
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
-		echo "Hallo!!";
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      echo $zeile["Name"].";".$zeile["Anzahl"].";".$zeile["Haltbarkeitsdatum"]."|"; 
+      echo $zeile["Nummer"].";".$zeile["Name"].";".$zeile["Anzahl"].";".$zeile["Haltbarkeitsdatum"]."|"; 
   }    
 	//Verbindung schließen
 	closeConnection($connection);

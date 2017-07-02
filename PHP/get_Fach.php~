@@ -67,13 +67,13 @@ function neuerUser ($connection) {
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
       echo $zeile["Name"]."|"; 
-      
+  }    
   // Das Objekt wieder freigeben.
    //Ergebnisse leeren
 	$result->free();
 	closeConnection($connection);
   
-}}
+}
   
 
 //Verbindung schließen.
