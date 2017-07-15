@@ -77,7 +77,7 @@ function neuerUser ($connection) {
    //Ergebnisse leeren
 	$result->free();
 	if(!empty($nummer)){
-	$sqlStmt = "INSERT INTO `KAPPA`.`Lebensmittel` (`Nummer`, `Name`, `Anzahl`, `Haltbarkeitsdatum`, `Fach`) VALUES (NULL, '".$_GET["name"]."', '".$_GET["zahl"]."', '".$_GET["mhd"]."', '".$fach."');";
+	$sqlStmt = "INSERT INTO `KAPPA`.`Lebensmittel` (`Nummer`, `Name`, `Anzahl`, `Haltbarkeitsdatum`, `Fach`, `Besitzer`) VALUES (NULL, '".$_GET["name"]."', '".$_GET["zahl"]."', '".$_GET["mhd"]."', '".$fach."', '".$_GET["mail"]."');";	
 	$result =  mysqli_query($connection,$sqlStmt);
 	if($result==true)
 		echo "Erfolg";
