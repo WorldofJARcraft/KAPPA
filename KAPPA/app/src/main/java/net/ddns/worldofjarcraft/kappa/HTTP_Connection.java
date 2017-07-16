@@ -28,18 +28,12 @@ public class HTTP_Connection extends AsyncTask<String, Void, String> {
      * speichert die aufzurufende URL
      */
     private String url = "";
-    /**
-     * speichert die reine IP-Adresse des Servers
-     */
     //maximale Wiederholungen. Default 10.
     int mMaxRetries = 3;
     /**
-     * Hauptkonstruktor der Klasse. Maximalzahl an Verbindungsversuchen ist 10.
+     * Hauptkonstruktor der Klasse. Maximalzahl an Verbindungsversuchen ist 3.
      *
      * @param nachricht die komplette aufzurufende Web-Adresse
-     * @param delegate  true für Resultat weitergeben, false für Resultat nicht weitergeben
-     * @param url       die eigentliche IP-Adresse des Zielservers
-     * @param mContext  ein Kontext für die Ausgabe von Toasts
      */
     public HTTP_Connection(String nachricht) {
         //übergebene Werte in globalen Variablen speichern
@@ -48,11 +42,9 @@ public class HTTP_Connection extends AsyncTask<String, Void, String> {
     }
     public static int timeoutmillis = 1000;
     /**
-     * Zusätzlicher Konstruktor, in dem man eine Maximalzahl an versuchen übergeben kann.
+     * Zusätzlicher Konstruktor, in dem man eine Maximalzahl an Versuchen übergeben kann.
      *
      * @param nachricht die komplette aufzurufende Web-Adresse
-     * @param delegate  true für Resultat weitergeben, false für Resultat nicht weitergeben
-     * @param url       die eigentliche IP-Adresse des Zielservers
      */
     public HTTP_Connection(String nachricht, int mMaxRetries) {
         //übergebene Werte in globalen Variablen speichern

@@ -6,6 +6,12 @@ package net.ddns.worldofjarcraft.kappa;
  */
 
 public final class data {
+    /**
+     * E-Mail-Adresse des angemeldeten Benutzers.
+     */
     public static String mail;
+    /**
+     * Passwort des Benutzers.
+     */
     public static String pw;
 }
