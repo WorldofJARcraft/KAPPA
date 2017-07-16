@@ -22,7 +22,7 @@ function neuerUser ($connection) {
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
 	$sqlStmt = "INSERT INTO `KAPPA`.`Benutzer` (`EMail`, `Passwort`) VALUES ('".$_GET["mail"]."', '".$_GET["pw"]."');";
 	$result =  mysqli_query($connection,$sqlStmt);
-	if($result==true)
+	if($result===true)
 		echo "Erfolg";
 	//keine Ergebnisse, die zu betrachten wären
 

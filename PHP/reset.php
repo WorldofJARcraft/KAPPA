@@ -20,7 +20,6 @@ function neuerUser ($connection) {
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
 	$sqlStmt = "SELECT Code FROM `resetPW` WHERE Benutzer='".$_GET["mail"]."';";
-	echo $sqlStmt;
   //Abfrage vorbereiten
   $result =  mysqli_query($connection,$sqlStmt);
 	$match = "false";  
@@ -29,7 +28,6 @@ function neuerUser ($connection) {
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
       if($zeile["Code"]===$_GET["code"])
       $match = "true";
-      echo $zeile["Code"]."<br>";
       }
       
   if($match==="true"){
@@ -40,7 +38,6 @@ function neuerUser ($connection) {
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
 	$sqlStmt = "UPDATE `KAPPA`.`Benutzer` SET `Passwort` = '".$_GET["newPW"]."' WHERE `Benutzer`.`EMail` = '".$_GET["mail"]."';";
-	echo $sqlStmt;
 	$result =  mysqli_query($connection,$sqlStmt);
 	if($result==true)
 		echo "Erfolg";
@@ -48,7 +45,7 @@ function neuerUser ($connection) {
 	$result =  mysqli_query($connection,$sqlStmt);
 	$empfaenger = $_GET["mail"];
 	$betreff = "Rücksetzen Ihres KAPPA-Passwortes";
-	$from = "Von: KAPPA-Administrator <kappa@worldofjarcraft.ddns.net>";
+	$from = "From: KAPPA-Administrator <kappa@worldofjarcraft.ddns.net>";
 	$text = "Ihr KAPPA-Passwort wurde erfolgreich zurückgesetzt.";
 mail($empfaenger, $betreff, $text, $from);	
 	//keine Ergebnisse, die zu betrachten wären

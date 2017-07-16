@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">KAPPA</string>
+    <string name="title_activity_intro">IntroActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_login">Anmelden</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="Email">E-Mail</string>
+    <string name="save_credentials">Anmeldedaten speichern</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="sign_up">Registrieren</string>
+    <string name="logged_in">Anmeldung erfolgreich!</string>
+    <string name="login_impossible">Anmeldung war nicht möglich: Benutzername oder Passwort falsch.</string>
+    <string name= "network_error">Es ist ein Netzwerkfehler aufgetreten!</string>
+    <string name="forgot_PW">Passwort vergessen</string>
+    <string name="signed_up">Konto wurde erfolgreich erstellt!</string>
+    <string name="resetted">Sie erhalten eine E-Mail mit einem Rücksetzlink. Dieser setzt das Passwort auf das von Ihnen gewählte zurück.</string>
+    <string name="neues_PW">Bitte geben Sie ein neues Passwort ein.</string>
+    <string name="user_nicht_da">Die eingegebene E-Mail-Adresse ist nicht bekannt.</string>
+</resources>
