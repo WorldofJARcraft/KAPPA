@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,11 +9,38 @@
     tools:context="net.ddns.worldofjarcraft.kappa.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <EditText
-        android:id="@+id/mail"
-        style="@android:style/Widget.Material.Light.EditText"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <CheckedTextView
+            android:id="@+id/checkedTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/login_Title"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+    </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/mail"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar2"
+        android:layout_marginTop="26dp"
         android:ems="10"
         android:hint="@string/Email"
         android:inputType="textEmailAddress"
@@ -28,11 +55,13 @@
 
     <EditText
         android:id="@+id/pw"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/mail"
-        android:layout_alignStart="@+id/mail"
-        android:layout_below="@+id/mail"
+        android:layout_above="@+id/save"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="17dp"
         android:ems="10"
         android:hint="Passwort"
         android:inputType="textPassword"
@@ -46,66 +75,73 @@
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pw"
-        android:layout_alignStart="@+id/pw"
-        android:layout_below="@+id/pw"
-        android:layout_marginTop="17dp"
         android:checked="true"
         android:text="@string/save_credentials"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="128dp" />
+        tools:layout_editor_absoluteY="128dp"
+        android:layout_above="@+id/signin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="17dp" />
 
     <Button
         android:id="@+id/signin"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/save"
-        android:layout_marginTop="45dp"
         android:text="@string/sign_in"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="177dp" />
+        tools:layout_editor_absoluteY="177dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/signup"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
         android:text="@string/sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="243dp" />
+        tools:layout_editor_absoluteY="243dp"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/signin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/vergessen"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/progress"
-        android:text="@string/forgot_PW" />
+        android:text="@string/forgot_PW"
+        android:layout_below="@+id/signup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="19dp" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/space2"
+        android:layout_below="@+id/vergessen"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ProgressBar
         android:id="@+id/progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/signin"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:indeterminate="true"
         android:indeterminateOnly="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:layout_below="@+id/space2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="28dp" />
 
-</LinearLayout>
+</RelativeLayout>

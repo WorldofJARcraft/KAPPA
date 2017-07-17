@@ -13,7 +13,7 @@
         android:theme="@android:style/Animation">
         <activity
             android:name=".LaunchActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +23,11 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".EinkaufActivity"
+            android:label="@string/title_activity_einkauf"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
