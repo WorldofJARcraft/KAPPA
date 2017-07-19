@@ -27,7 +27,11 @@
         <activity
             android:name=".EinkaufActivity"
             android:label="@string/title_activity_einkauf"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SchrankActivity"
+            android:label="@string/title_activity_schrank"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

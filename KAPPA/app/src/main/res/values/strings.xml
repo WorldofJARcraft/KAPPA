@@ -128,6 +128,18 @@
     <string name="title_activity_einkaufslisten">EinkaufslistenActivity</string>
     <string name="einkaeufe">Ihre Einkaufsliste:</string>
     <string name="neuer_Einkauf">Einkauf hinzufügen</string>
+    <string name="einkauf_loeschen_titel">Löschen bestätigen</string>
+    <string name="einkauf_loeschen">Diesen Eintrag wirklich löschen?</string>
     <string name="Einkauf_Beschreibung">Bitte geben Sie den zu erledigenden Einkauf ein!</string>
     <string name="delete_Einkauf">Diesen Einkauf löschen.</string>
+    <string name="title_activity_schrank">SchrankActivity</string>
+    <string name="title_Schrankwahl">KAPPA - Kühlschrankauswahl</string>
+    <string name="info_Name">Name des Kühlschranks:</string>
+    <string name="neuer_Schrank">Kühlschrank hinzufügen:</string>
+    <string name="info_faecher">Zahl der Fächer:</string>
+    <string name="schrank_loeschen_titel">Löschen bestätigen</string>
+    <string name="schrank_loeschen">Möchten Sie diesen Kühlschrank wirklich löschen?</string>
+    <string name="unauth_titel">Benutzerdaten falsch</string>
+    <string name="unauth">Die gespeicherten Benutzerdaten sind nicht gültig. Bitte melden Sie sich neu an.</string>
+    <string name="info_schraenke">Ihre Kühlschränke:</string>
 </resources>

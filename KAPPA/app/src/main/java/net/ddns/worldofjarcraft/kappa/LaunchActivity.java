@@ -1,7 +1,9 @@
 package net.ddns.worldofjarcraft.kappa;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +45,13 @@ public class LaunchActivity extends AppCompatActivity {
                 einkauf();
             }
         });
+        final Button button = (Button) findViewById(R.id.schraenkeButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                schraenke();
+            }
+        });
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -54,6 +63,30 @@ public class LaunchActivity extends AppCompatActivity {
             System.out.println("Melde mich mit gespeiucherten Daten an!");
             data.mail=login.getString(user_preference,null);
             data.pw=login.getString(user_password,null);
+            //prüfen, ob Daten gültig sind
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    if(output.equals("true")){
+                        System.out.println("Daten korrekt!");
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+                        builder.setTitle(R.string.unauth_titel);
+                        builder.setMessage(R.string.unauth);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setTheme(R.style.AppTheme);
+                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+                            }
+                        });
+                        builder.show();
+                    }
+                }
+            };
+            conn.execute("params");
         }
 
         else{
@@ -80,4 +113,5 @@ public class LaunchActivity extends AppCompatActivity {
     public void einkauf(){
         startActivity(new Intent(this,EinkaufActivity.class));
     }
+    public void schraenke(){startActivity(new Intent(this, SchrankActivity.class));}
 }

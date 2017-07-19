@@ -68,9 +68,32 @@ public class EinkaufActivity extends Activity {
                     v.setText(teile[1]);
                     v.setTextSize(24);
                     v.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    v.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            final View v = view;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EinkaufActivity.this);
+                            builder.setTitle(R.string.einkauf_loeschen_titel);
+                            builder.setMessage(R.string.einkauf_loeschen);
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    delete(v);
+                                }
+                            });
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            builder.show();
+                            return false;
+                        }
+                    });
                     Space s = new Space(EinkaufActivity.this);
                     s.setMinimumHeight(30);
-                    LinearLayout hor = new LinearLayout(EinkaufActivity.this);
+                    /*LinearLayout hor = new LinearLayout(EinkaufActivity.this);
                     hor.setOrientation(LinearLayout.HORIZONTAL);
                     hor.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     ContextThemeWrapper newContext = new ContextThemeWrapper(EinkaufActivity.this, R.style.AppTheme);
@@ -84,7 +107,8 @@ public class EinkaufActivity extends Activity {
                     });
                     hor.addView(v);
                     hor.addView(button);
-                    layout.addView(hor);
+                    layout.addView(hor);*/
+                    layout.addView(v);
                     layout.addView(s);
                 }
             }
@@ -102,13 +126,10 @@ public class EinkaufActivity extends Activity {
         int spaces = 0;
         for(int i=0;i<layout.getChildCount();i++){
             View v = layout.getChildAt(i);
-            if(v instanceof LinearLayout){
-                LinearLayout akt = (LinearLayout) v;
-                if(akt.getChildAt(1)==view){
+                if(v==view){
                     nummer=i-spaces;
                 }
-            }
-            else
+            else if (v instanceof Space)
                 spaces++;
         }
         if(nummer!=-1){
@@ -155,6 +176,7 @@ public class EinkaufActivity extends Activity {
                         }
                         else{
                             Toast.makeText(EinkaufActivity.this,"Es ist ein Netzwerkfehler aufgetreten.",Toast.LENGTH_LONG).show();
+                            prog.setVisibility(View.GONE);
                         }
                     }
                 };
