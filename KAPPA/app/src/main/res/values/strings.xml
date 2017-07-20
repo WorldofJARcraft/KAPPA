@@ -142,4 +142,33 @@
     <string name="unauth_titel">Benutzerdaten falsch</string>
     <string name="unauth">Die gespeicherten Benutzerdaten sind nicht gültig. Bitte melden Sie sich neu an.</string>
     <string name="info_schraenke">Ihre Kühlschränke:</string>
+    <string name="title_activity_inhalt">KAPPA - Kühlschrankinhalt</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+    <string name="fehler_schrank">Der gewählte Kühlschrank konnte leider nicht geöffnet werden!</string>
+    <string name="name_inhalte">Ihre Lebensmittel:</string>
+    <string name="neues_Fach">Fach hinzufügen</string>
+    <string name="add_Fach">Fach hinzufügen</string>
+    <string name="add_Fach_info">Name des neues Fachs:</string>
+    <string name="title_activity_aader"></string>
+    <string name="neues_LM">Neues Lebensmittel hinzufügen</string>
+    <string name="info_Name_LM">Name des Lebensmittels:</string>
+    <string name="info_Anzahl_LM">Anzahl des Lebensmittels:</string>
+    <string name="info_MHD">Midesthaltbarkeitsdatum speichern?</string>
+    <string name="name">Name</string>
+    <string name="anzahl">Anzahl</string>
+    <string name="haltbar">Verbleibende Haltbarkeit</string>
+    <string name="keine_Angabe">Keine Angabe.</string>
+    <string name="tage">Tage</string>
+    <string name="monate">Monate</string>
+    <string name="jahre">Jahre</string>
+    <string name="abgelaufen">Abgelaufen!</string>
+    <string name="fach_akt_inhalt">Aktuelles Fach:</string>
 </resources>

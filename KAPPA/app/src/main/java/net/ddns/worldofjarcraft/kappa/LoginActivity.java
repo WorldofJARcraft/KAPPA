@@ -2,6 +2,7 @@ package net.ddns.worldofjarcraft.kappa;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -82,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.commit();
                             }
                             dialogInterface.dismiss();
-                            LoginActivity.this.finish();
+                            startActivity(new Intent(LoginActivity.this,LaunchActivity.class));
                         }
                     };
                     builder.setNeutralButton("OK",posListener);
@@ -142,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.commit();
                             }
                             dialogInterface.dismiss();
-                            LoginActivity.this.finish();
+                            startActivity(new Intent(LoginActivity.this,LaunchActivity.class));
                         }
                     };
                     builder.setNeutralButton("OK",posListener);

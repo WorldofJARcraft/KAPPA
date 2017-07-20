@@ -122,6 +122,21 @@ public class SchrankActivity extends Activity {
 
     public void open(View v){
         System.out.println("Öffne Kühlschrank...");
+        int index = identify(v, (LinearLayout) findViewById(R.id.schraenkeListe));
+        if(index==-1){
+            Toast.makeText(this, R.string.fehler_schrank,Toast.LENGTH_LONG).show();
+            aktualisieren();
+        }
+        else{
+            Pair<Integer,String> werte = liste.get(index);
+            Intent intent = new Intent(SchrankActivity.this, InhaltActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("schrank", werte.first);
+            b.putString("name",werte.second);
+            //Your id
+            intent.putExtras(b); //Put your id to your next Intent
+            startActivity(intent);
+        }
     }
 
     public int identify(View view, LinearLayout layout){

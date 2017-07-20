@@ -24,8 +24,87 @@ public class LaunchActivity extends AppCompatActivity {
      * Unter diesem Namen wird das Passwort gespeichert.
      */
     public static final String user_password = "pw";
+    @Override
+    protected void onStart(){
+        super.onStart();
+        SharedPreferences login = getSharedPreferences(login_name,MODE_PRIVATE);
+        if((login.contains(user_preference)&&login.contains(user_password))||(data.mail!=null&&data.pw!=null)){
+            System.out.println("Melde mich mit gespeiucherten Daten an!");
+            data.mail=login.getString(user_preference,null);
+            data.pw=login.getString(user_password,null);
+            //prüfen, ob Daten gültig sind
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    if(output.equals("true")){
+                        System.out.println("Daten korrekt!");
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+                        builder.setTitle(R.string.unauth_titel);
+                        builder.setMessage(R.string.unauth);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setTheme(R.style.AppTheme);
+                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+                            }
+                        });
+                        builder.show();
+                    }
+                }
+            };
+            conn.execute("params");
+        }
 
+        else{
+            System.out.println("Frage Nutzerdaten an!");
+            setTheme(R.style.AppTheme);
+            startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+        }
 
+    }
+    @Override
+    protected void onPostResume(){
+        super.onPostResume();
+        SharedPreferences login = getSharedPreferences(login_name,MODE_PRIVATE);
+        if((login.contains(user_preference)&&login.contains(user_password))||(data.mail!=null&&data.pw!=null)){
+            System.out.println("Melde mich mit gespeiucherten Daten an!");
+            data.mail=login.getString(user_preference,null);
+            data.pw=login.getString(user_password,null);
+            //prüfen, ob Daten gültig sind
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    if(output.equals("true")){
+                        System.out.println("Daten korrekt!");
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+                        builder.setTitle(R.string.unauth_titel);
+                        builder.setMessage(R.string.unauth);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setTheme(R.style.AppTheme);
+                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+                            }
+                        });
+                        builder.show();
+                    }
+                }
+            };
+            conn.execute("params");
+        }
+
+        else{
+            System.out.println("Frage Nutzerdaten an!");
+            setTheme(R.style.AppTheme);
+            startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +183,7 @@ public class LaunchActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = login.edit();
         editor.remove(user_preference);
         editor.remove(user_password);
+        editor.commit();
         data.mail=data.pw=null;
         System.out.println("Frage Nutzerdaten an!");
         setTheme(R.style.AppTheme);

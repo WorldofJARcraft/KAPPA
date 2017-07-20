@@ -31,7 +31,14 @@
         <activity
             android:name=".SchrankActivity"
             android:label="@string/title_activity_schrank"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".InhaltActivity"
+            android:label="@string/title_activity_inhalt"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AADERActivity"
+            android:label="@string/title_activity_aader"></activity>
     </application>
 
 </manifest>
