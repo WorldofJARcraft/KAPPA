@@ -160,16 +160,10 @@ public class SchrankActivity extends Activity {
         info_Name.setText(R.string.info_Name);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-        final TextView info_faecher = new TextView(this);
-        info_faecher.setText(R.string.info_faecher);
-        final EditText zahl = new EditText(this);
-        zahl.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(info_Name);
         layout.addView(input);
-        layout.addView(info_faecher);
-        layout.addView(zahl);
 
         builder.setView(layout);
 
@@ -177,7 +171,7 @@ public class SchrankActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String url = "https://worldofjarcraft.ddns.net/kappa/neuer_Schrank.php?mail="+data.mail+"&pw="+data.pw+"&name="+input.getText().toString().replaceAll(" ","%20")+"&faecher="+zahl.getText().toString();
+                String url = "https://worldofjarcraft.ddns.net/kappa/neuer_Schrank.php?mail="+data.mail+"&pw="+data.pw+"&name="+input.getText().toString().replaceAll(" ","%20")+"&faecher=0";
                 HTTP_Connection login = new HTTP_Connection(url,2);
                 AsyncResponse response = new AsyncResponse() {
                     @Override

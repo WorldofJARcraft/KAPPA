@@ -32,6 +32,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.os.Build.VERSION_CODES.M;
+import static net.ddns.worldofjarcraft.kappa.R.id.space2;
 
 public class InhaltActivity extends Activity{
 
@@ -113,6 +115,7 @@ public class InhaltActivity extends Activity{
                 addFood();
             }
         });
+        button.bringToFront();
         FloatingActionButton button2 = findViewById(R.id.floatingActionButton2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +123,7 @@ public class InhaltActivity extends Activity{
                 open(aktFach);
             }
         });
+        button2.bringToFront();
     }
 
     private void addFood() {
@@ -206,6 +210,7 @@ public class InhaltActivity extends Activity{
                 int akt = 0;
                 for(String fach:neuefaecher){
                     String[] werte = fach.split(";");
+                    if(werte.length==2){
                     Pair<Integer,String> fa = new Pair<>(new Integer(werte[0]),werte[1]);
                     faecher.add(fa);
                     menu.add(0, akt, Menu.NONE, werte[1]).setIcon(R.mipmap.icon).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -217,7 +222,7 @@ public class InhaltActivity extends Activity{
                             return false;
                         }
                     });
-                    akt++;
+                    akt++;}
                 }
                 if(menu.size()>0){
                     aktFach = menu.getItem(0);
@@ -236,7 +241,9 @@ public class InhaltActivity extends Activity{
         conn.execute("params");
     }
 MenuItem aktFach;
+    List<Integer> ids;
     private void open(MenuItem menuItem) {
+        ids=new ArrayList<>();
         int index =menuItem.getItemId();
         Pair<Integer,String> werte = faecher.get(index);
         TextView info_fach = findViewById(R.id.Info_Fach);
@@ -253,24 +260,45 @@ MenuItem aktFach;
                 TableRow kopfzeile = new TableRow(InhaltActivity.this);
                 TextView v1= new TextView(InhaltActivity.this);
                 v1.setText(R.string.name);
+                v1.setTextSize(24);
                 TextView v2= new TextView(InhaltActivity.this);
                 v2.setText(R.string.anzahl);
+                v2.setTextSize(24);
                 TextView v3= new TextView(InhaltActivity.this);
                 v3.setText(R.string.haltbar);
+                v3.setTextSize(24);
+                Space space = new Space(InhaltActivity.this);
+                space.setMinimumWidth(30);
+                Space space2 = new Space(InhaltActivity.this);
+                space2.setMinimumWidth(30);
+                Space space3 = new Space(InhaltActivity.this);
+                space3.setMinimumWidth(30);
                 kopfzeile.addView(v1);
+                kopfzeile.addView(space);
                 kopfzeile.addView(v2);
+                kopfzeile.addView(space2);
                 kopfzeile.addView(v3);
+                kopfzeile.addView(space3);
                 tabelle.addView(kopfzeile);
                 for(String lebensmittel:lm){
                     String[] attribute = lebensmittel.split(";");
                     if(attribute.length>3){
+                        try {
+
+                    ids.add(new Integer(attribute[0]));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     TableRow zeile = new TableRow(InhaltActivity.this);
                     TextView i1= new TextView(InhaltActivity.this);
                     i1.setText(attribute[1]);
+                    i1.setTextSize(24);
                     TextView i2= new TextView(InhaltActivity.this);
                     i2.setText(attribute[2]);
+                        i2.setTextSize(24);
                     TextView i3= new TextView(InhaltActivity.this);
                     i3.setText(R.string.keine_Angabe);
+                        i3.setTextSize(24);
                     try {
                         Long mhd = new Long(attribute[3]);
                         if(mhd>0){
@@ -297,9 +325,45 @@ MenuItem aktFach;
                     }catch (Exception e){
                         e.printStackTrace();
                     }
+                         space = new Space(InhaltActivity.this);
+                        space.setMinimumWidth(30);
+                         space2 = new Space(InhaltActivity.this);
+                        space2.setMinimumWidth(30);
+                         space3 = new Space(InhaltActivity.this);
+                        space3.setMinimumWidth(30);
                     zeile.addView(i1);
+                    zeile.addView(space);
                     zeile.addView(i2);
+
+                        zeile.addView(space2);
                     zeile.addView(i3);
+
+                        zeile.addView(space3);
+                        zeile.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                if(view instanceof TableRow) {
+                                    final TableRow v = (TableRow) view;
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(InhaltActivity.this);
+                                    builder.setTitle(R.string.essen_loeschen_titel);
+                                    builder.setMessage(R.string.essen_loeschen);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            deleteEssen(v);
+                                        }
+                                    });
+                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    });
+                                    builder.show();
+                                }
+                                return false;
+                            }
+                        });
                     tabelle.addView(zeile);
                     }
                 }
@@ -307,7 +371,23 @@ MenuItem aktFach;
         };
         conn.execute("params");
     }
-
+    public void deleteEssen(TableRow row){
+        TableLayout layout = findViewById(R.id.lebensmittel);
+        int index = layout.indexOfChild(row);
+        if(index>=0){
+            int order_id = ids.get(index-1);
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/delete_Lebensmittel.php?mail="+data.mail+"&pw="+data.pw+"&id="+order_id);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    open(aktFach);
+                    if(!output.equals("Erfolg"))
+                        Toast.makeText(InhaltActivity.this,R.string.network_error,Toast.LENGTH_LONG).show();
+                }
+            };
+            conn.execute("params");
+        }
+    }
     public void addFach(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_Fach);

@@ -171,4 +171,8 @@
     <string name="jahre">Jahre</string>
     <string name="abgelaufen">Abgelaufen!</string>
     <string name="fach_akt_inhalt">Aktuelles Fach:</string>
+    <string name="kein_Fach_da">Der aktuelle Kühlschrank hat noch kein Fach.</string>
+    <string name="title_LM">KAPPA - Lebensmittel</string>
+    <string name="essen_loeschen_titel">Lebensmittel löschen?</string>
+    <string name="essen_loeschen">Möchten Sie dieses Lebensmittel wirklich löschen?</string>
 </resources>
