@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:indeterminate="true"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarEinkauf"
@@ -58,11 +58,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/reloadButton"
-        android:layout_toStartOf="@+id/reloadButton"
-        android:layout_below="@+id/textView4">
+        android:layout_toStartOf="@+id/neuerEinkauf"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/reloadButton">
 
         <LinearLayout
             android:id="@+id/einkaufsliste"
@@ -81,12 +80,9 @@
         android:clickable="true"
         app:fabSize="normal"
         app:srcCompat="@drawable/einkaufsliste"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="19dp"
-        android:layout_marginEnd="19dp"
-        android:layout_marginBottom="19dp" />
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/textView4"
@@ -105,12 +101,11 @@
         android:id="@+id/reloadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/neuerEinkauf"
-        android:layout_alignEnd="@+id/neuerEinkauf"
-        android:layout_alignRight="@+id/neuerEinkauf"
-        android:layout_marginBottom="16dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/reload" />
+        app:srcCompat="@drawable/reload"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

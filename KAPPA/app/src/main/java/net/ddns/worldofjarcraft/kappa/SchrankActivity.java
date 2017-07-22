@@ -48,10 +48,11 @@ public class SchrankActivity extends Activity {
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
-                String[] boxen = output.split("\\|");
                 LinearLayout schraenke = (LinearLayout) findViewById(R.id.schraenkeListe);
                 schraenke.removeAllViews();
                 liste = new ArrayList<>();
+                if(!output.isEmpty()){
+                String[] boxen = output.split("\\|");
                 for(String box:boxen){
                     String[] attribute = box.split(";");
                     liste.add(new Pair<Integer, String>(new Integer(attribute[0]), attribute[1]));
@@ -92,6 +93,7 @@ public class SchrankActivity extends Activity {
                     s.setMinimumHeight(30);
                     schraenke.addView(v);
                     schraenke.addView(s);
+                }
                 }
                 ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
                 prog.setVisibility(View.GONE);

@@ -8,6 +8,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -63,6 +66,9 @@ public class InhaltActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inhalt);
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.bringToFront();
+        bar.setVisibility(View.VISIBLE);
         Bundle b = getIntent().getExtras();
         if(b!=null){
             nr=b.getInt("schrank");
@@ -90,7 +96,7 @@ public class InhaltActivity extends Activity{
 
             }
         });
-        Button menu = (Button) findViewById(R.id.menuButton);
+        FloatingActionButton menu = findViewById(R.id.menuButton);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,6 +104,7 @@ public class InhaltActivity extends Activity{
                 layout.openDrawer(GravityCompat.START);
             }
         });
+        menu.bringToFront();
         ladeFaecher();
         ladeLebensmittel();
        /* mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -124,79 +131,125 @@ public class InhaltActivity extends Activity{
             }
         });
         button2.bringToFront();
+        bar.setVisibility(View.GONE);
+    }
+
+    private void deleteFach(MenuItem aktFach) {
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.setVisibility(View.VISIBLE);
+        int index =aktFach.getItemId();
+        Pair<Integer,String> werte = faecher.get(index);
+        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/delete_Fach.php?mail="+data.mail+"&pw="+data.pw+"&id="+werte.first);
+        conn.delegate = new AsyncResponse() {
+            @Override
+            public void processFinish(String output, String url) {
+                if(!output.equals("Erfolg")){
+                    Toast.makeText(InhaltActivity.this,R.string.network_error,Toast.LENGTH_LONG).show();
+                }
+                Bundle b = new Bundle(2);
+                b.putString("name",name);
+                b.putInt("schrank",nr);
+                Intent intent = new Intent(InhaltActivity.this, InhaltActivity.class);
+                intent.putExtras(b);
+                ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                bar.setVisibility(View.GONE);
+                startActivity(intent);
+            }
+        };
+        conn.execute("params");
     }
 
     private void addFood() {
-        int index =aktFach.getItemId();
-        final Pair<Integer,String> werte = faecher.get(index);
-        //https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=admin@worldofjarcraft.ddns.net&pw=1234&schrank=Kueche&fach=7&name=RANZ&zahl=999&mhd=123466789987654321
-        AlertDialog.Builder builder = new AlertDialog.Builder(InhaltActivity.this);
-        builder.setTitle(R.string.neues_LM);
-        TextView v1 = new TextView(this);
-        v1.setText(R.string.info_Name_LM);
-        final EditText name_lm = new EditText(this);
-        name_lm.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-        TextView v2 = new TextView(this);
-        v2.setText(R.string.info_Anzahl_LM);
-        final EditText zahl_lm = new EditText(this);
-        name_lm.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        final CheckBox mhd = new CheckBox(this);
-        mhd.setText(R.string.info_MHD);
-        mhd.setSelected(false);
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.addView(v1);
-        layout.addView(name_lm);
-        layout.addView(v2);
-        layout.addView(zahl_lm);
-        layout.addView(mhd);
-        builder.setView(layout);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(mhd.isChecked()){
-                    final DatePickerDialog dialog = new DatePickerDialog(InhaltActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(i,i1,i2);
-                            long time = cal.getTimeInMillis();
-                            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+name+"&fach="+werte.second+"&name="+name_lm.getText().toString().replaceAll(" ","%20")+"&zahl="+zahl_lm.getText().toString()+"&mhd="+time);
-                            conn.delegate= new AsyncResponse() {
-                                @Override
-                                public void processFinish(String output, String url) {
-                                    open(aktFach);
+        if(aktFach!=null) {
+            int index = aktFach.getItemId();
+            final Pair<Integer, String> werte = faecher.get(index);
+            //https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=admin@worldofjarcraft.ddns.net&pw=1234&schrank=Kueche&fach=7&name=RANZ&zahl=999&mhd=123466789987654321
+            AlertDialog.Builder builder = new AlertDialog.Builder(InhaltActivity.this);
+            builder.setTitle(R.string.neues_LM);
+            TextView v1 = new TextView(this);
+            v1.setText(R.string.info_Name_LM);
+            final EditText name_lm = new EditText(this);
+            name_lm.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+            TextView v2 = new TextView(this);
+            v2.setText(R.string.info_Anzahl_LM);
+            final EditText zahl_lm = new EditText(this);
+            name_lm.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            final CheckBox mhd = new CheckBox(this);
+            mhd.setText(R.string.info_MHD);
+            mhd.setSelected(false);
+            LinearLayout layout = new LinearLayout(this);
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.addView(v1);
+            layout.addView(name_lm);
+            layout.addView(v2);
+            layout.addView(zahl_lm);
+            layout.addView(mhd);
+            builder.setView(layout);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (mhd.isChecked()) {
+                        final DatePickerDialog dialog = new DatePickerDialog(InhaltActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            private boolean called = false;
+
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                //verhindert mehrfachen Aufruf
+                                if (!called) {
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.set(i, i1, i2);
+                                    long time = cal.getTimeInMillis();
+                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=" + time);
+                                    conn.delegate = new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output, String url) {
+                                            ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                                            bar.setVisibility(View.GONE);
+                                            open(aktFach);
+                                        }
+                                    };
+                                    conn.execute("params");
+                                    called = true;
                                 }
-                            };
-                            conn.execute("params");
-                        }
-                    }, Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                    dialog.show();
+                            }
+                        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                        dialog.show();
+                    } else {
+                        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=0");
+                        conn.delegate = new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output, String url) {
+                                ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                                bar.setVisibility(View.GONE);
+                                open(aktFach);
+                            }
+                        };
+                        conn.execute("params");
+                    }
+                    dialogInterface.dismiss();
                 }
-                else{
-                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+name+"&fach="+werte.second+"&name="+name_lm.getText().toString().replaceAll(" ","%20")+"&zahl="+zahl_lm.getText().toString()+"&mhd=0");
-                    conn.delegate= new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output, String url) {
-                            open(aktFach);
-                        }
-                    };
-                    conn.execute("params");
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                    bar.setVisibility(View.GONE);
                 }
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
+            });
+            builder.show();
+            ProgressBar bar = findViewById(R.id.progressBarInhalt);
+            bar.setVisibility(View.VISIBLE);
+        }
+        else {
+            Toast.makeText(this,R.string.erst_fach,Toast.LENGTH_LONG).show();
+        }
     }
 
     List<Pair<Integer,String>> faecher;
     public void ladeFaecher(){
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.setVisibility(View.VISIBLE);
         String url = "https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+name;
         HTTP_Connection conn = new HTTP_Connection(url,1);
         conn.delegate = new AsyncResponse() {
@@ -205,6 +258,8 @@ public class InhaltActivity extends Activity{
                 String[] neuefaecher = output.split("\\|");
                 faecher = new ArrayList<>();
                 NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+                TextView view = navigationView.findViewById(R.id.drawerHeaderTitle);
+                view.setText(name);
                 Menu menu = navigationView.getMenu();
                 menu.removeGroup(0);
                 int akt = 0;
@@ -217,6 +272,7 @@ public class InhaltActivity extends Activity{
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             System.out.println("Menü geklickt...");
+                            aktFach.setChecked(false);
                             aktFach=menuItem;
                             open(menuItem);
                             return false;
@@ -236,6 +292,43 @@ public class InhaltActivity extends Activity{
                         return false;
                     }
                 });
+                menu.add(0, akt+1, Menu.NONE, getResources().getString(R.string.fach_loeschen)).setIcon(R.drawable.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(InhaltActivity.this);
+                        builder.setTitle(R.string.fach_loeschen);
+                        builder.setMessage(R.string.fach_loeschen_info);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteFach(aktFach);
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        builder.show();
+                        return false;
+                    }
+                });
+                menu.add(0, akt+2, Menu.NONE, R.string.suche_LM).setIcon(R.drawable.lupe).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Bundle b = new Bundle(2);
+                        b.putInt("schrank",nr);
+                        b.putString("name",name);
+                        Intent i = new Intent(InhaltActivity.this,SucheActivity.class);
+                        i.putExtras(b);
+                        startActivity(i);
+                        return false;
+                    }
+                });
+                ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                bar.setVisibility(View.GONE);
             }
         };
         conn.execute("params");
@@ -243,13 +336,16 @@ public class InhaltActivity extends Activity{
 MenuItem aktFach;
     List<Integer> ids;
     private void open(MenuItem menuItem) {
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.setVisibility(View.VISIBLE);
+        menuItem.setChecked(true);
         ids=new ArrayList<>();
         int index =menuItem.getItemId();
         Pair<Integer,String> werte = faecher.get(index);
         TextView info_fach = findViewById(R.id.Info_Fach);
         info_fach.setText(R.string.fach_akt_inhalt);
         info_fach.append(werte.second);
-        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getLebensmittel.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+name+"&fach="+werte.second);
+        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getLebensmittel.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+name+"&fach="+werte.second.replaceAll(" ","%20"));
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
@@ -261,12 +357,15 @@ MenuItem aktFach;
                 TextView v1= new TextView(InhaltActivity.this);
                 v1.setText(R.string.name);
                 v1.setTextSize(24);
+                v1.setTypeface(v1.getTypeface(), Typeface.BOLD);
                 TextView v2= new TextView(InhaltActivity.this);
                 v2.setText(R.string.anzahl);
                 v2.setTextSize(24);
+                v2.setTypeface(v2.getTypeface(), Typeface.BOLD);
                 TextView v3= new TextView(InhaltActivity.this);
                 v3.setText(R.string.haltbar);
                 v3.setTextSize(24);
+                v3.setTypeface(v3.getTypeface(), Typeface.BOLD);
                 Space space = new Space(InhaltActivity.this);
                 space.setMinimumWidth(30);
                 Space space2 = new Space(InhaltActivity.this);
@@ -317,9 +416,16 @@ MenuItem aktFach;
 
                                     text+=cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
                                 i3.setText(text);
+                                if(cal.get(Calendar.YEAR)-1970==0&&!text.contains(getResources().getString(R.string.monate))&&cal.get(Calendar.DAY_OF_MONTH)<8){
+                                    i3.setTextColor(Color.YELLOW);
+                                }
+                                else
+                                i3.setTextColor(Color.GREEN);
                             }
                             else{
                                 i3.setText(R.string.abgelaufen);
+
+                                i3.setTextColor(Color.RED);
                             }
                         }
                     }catch (Exception e){
@@ -367,11 +473,16 @@ MenuItem aktFach;
                     tabelle.addView(zeile);
                     }
                 }
+                ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                bar.setVisibility(View.GONE);
             }
         };
         conn.execute("params");
+
     }
     public void deleteEssen(TableRow row){
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.setVisibility(View.VISIBLE);
         TableLayout layout = findViewById(R.id.lebensmittel);
         int index = layout.indexOfChild(row);
         if(index>=0){
@@ -383,6 +494,8 @@ MenuItem aktFach;
                     open(aktFach);
                     if(!output.equals("Erfolg"))
                         Toast.makeText(InhaltActivity.this,R.string.network_error,Toast.LENGTH_LONG).show();
+                    ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                    bar.setVisibility(View.GONE);
                 }
             };
             conn.execute("params");
@@ -407,6 +520,8 @@ MenuItem aktFach;
                     @Override
                     public void processFinish(String output, String url) {
                         ladeFaecher();
+                        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                        bar.setVisibility(View.GONE);
                     }
                 };
                 login.delegate = response;
@@ -418,9 +533,13 @@ MenuItem aktFach;
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                ProgressBar bar = findViewById(R.id.progressBarInhalt);
+                bar.setVisibility(View.GONE);
             }
         });
         builder.show();
+        ProgressBar bar = findViewById(R.id.progressBarInhalt);
+        bar.setVisibility(View.VISIBLE);
         ladeFaecher();
     }
     public void ladeLebensmittel(){

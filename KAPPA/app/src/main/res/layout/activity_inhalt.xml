@@ -18,66 +18,86 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/Info_Fach"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/menuButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/scrollView3"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/menuButton"
+                android:clickable="true"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/menu"
+                android:layout_below="@+id/Info_Fach"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ProgressBar
+                android:id="@+id/progressBarInhalt"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:indeterminate="true"
+                tools:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/Info_Fach"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar2"
+                android:layout_toRightOf="@+id/progressBarInhalt"
+                android:layout_toStartOf="@+id/deleteButton"
                 android:text="@string/kein_Fach_da"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 tools:text="@string/fach_akt_inhalt" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/floatingActionButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/floatingActionButton"
-                android:layout_alignLeft="@+id/floatingActionButton"
-                android:layout_alignStart="@+id/floatingActionButton"
-                android:layout_marginBottom="14dp"
                 android:clickable="true"
                 app:fabSize="normal"
-                app:srcCompat="@drawable/reload" />
+                app:srcCompat="@drawable/reload"
+                android:layout_below="@+id/Info_Fach"
+                android:layout_centerHorizontal="true" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/floatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="11dp"
-                android:layout_marginRight="11dp"
                 android:clickable="true"
                 app:fabSize="normal"
-                app:srcCompat="@drawable/food" />
+                app:srcCompat="@drawable/food"
+                android:layout_below="@+id/Info_Fach"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <ScrollView
                 android:id="@+id/scrollView3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:shrinkColumns="*"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/menuButton">
+                android:layout_below="@+id/menuButton"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true">
+
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                        <TableLayout
-                            android:id="@+id/lebensmittel"
-                            android:layout_width="match_parent"
-                            android:padding="5dip"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:divider="?android:attr/dividerHorizontal"
-                            android:showDividers="middle"
-                            android:stretchColumns="0,1,2">
 
-                        </TableLayout>
+                    <TableLayout
+                        android:id="@+id/lebensmittel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="?android:attr/dividerHorizontal"
+                        android:orientation="vertical"
+                        android:padding="5dip"
+                        android:showDividers="middle"
+                        android:stretchColumns="0,1,2">
+
+                    </TableLayout>
                 </HorizontalScrollView>
             </ScrollView>
 
@@ -85,12 +105,12 @@
                 android:id="@+id/toolbar2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme">
+                android:theme="?attr/actionBarTheme"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
                 <CheckedTextView
                     android:id="@+id/checkedTextView"
@@ -104,19 +124,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </android.support.v7.widget.Toolbar>
 
-            <Button
-                android:id="@+id/menuButton"
-                android:layout_width="69dp"
-                android:layout_height="68dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="13dp"
-                android:layout_marginStart="13dp"
-                android:layout_marginTop="44dp"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/menu" />
-
         </RelativeLayout>
 
     </FrameLayout>
@@ -129,7 +136,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemTextAppearance="@style/MenuItems"
+        app:headerLayout="@layout/drawer_header"
         app:menu="@menu/menu_inhalt">
+
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

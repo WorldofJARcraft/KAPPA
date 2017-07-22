@@ -151,7 +151,10 @@ public class LoginActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-                else{
+                else if(output.equals("User schon vorhanden.")){
+                    Toast.makeText(LoginActivity.this,R.string.user_schon_vorhanden,Toast.LENGTH_LONG).show();
+                }
+                else {
                     Toast.makeText(LoginActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
                 }
             }

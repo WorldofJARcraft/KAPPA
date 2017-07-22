@@ -34,38 +34,34 @@
         android:id="@+id/neuerSchrank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@mipmap/icon" />
+        app:srcCompat="@mipmap/icon"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/reloadSchraenke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/reload" />
+        app:srcCompat="@drawable/reload"
+        android:layout_below="@+id/textView"
+        android:layout_toRightOf="@+id/prog_schrank"
+        android:layout_toEndOf="@+id/prog_schrank"
+        android:layout_marginLeft="63dp"
+        android:layout_marginStart="63dp" />
     <ScrollView
         android:id="@+id/schraenke"
         style="@android:style/Widget.Holo.ScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/prog_schrank"
-        android:layout_below="@+id/textView"
-        android:layout_toLeftOf="@+id/reloadSchraenke"
-        android:layout_toStartOf="@+id/reloadSchraenke"
-        android:layout_alignBottom="@+id/neuerSchrank">
+        android:layout_toEndOf="@+id/prog_schrank"
+        android:layout_below="@+id/neuerSchrank">
 
         <LinearLayout
             android:id="@+id/schraenkeListe"

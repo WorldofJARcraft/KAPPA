@@ -37,8 +37,9 @@
             android:label="@string/title_activity_inhalt"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".AADERActivity"
-            android:label="@string/title_activity_aader"></activity>
+            android:name=".SucheActivity"
+            android:label="@string/title_activity_suche"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

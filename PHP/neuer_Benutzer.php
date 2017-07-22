@@ -20,10 +20,23 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
+	$sqlStmt = "SELECT `EMail` FROM `Benutzer` WHERE `EMail` = '".$_GET["mail"]."'";
+	$result = mysqli_query($connection,$sqlStmt);
+	$vorhanden = 0;
+	if ($result = $connection->query($sqlStmt)){
+		$row_cnt = $result->num_rows;
+	if($row_cnt>0){ $vorhanden=1;}
+	else{$vorhanden=0;}
+	}
+	if($vorhanden===0){
 	$sqlStmt = "INSERT INTO `KAPPA`.`Benutzer` (`EMail`, `Passwort`) VALUES ('".$_GET["mail"]."', '".$_GET["pw"]."');";
 	$result =  mysqli_query($connection,$sqlStmt);
 	if($result===true)
 		echo "Erfolg";
+	}
+	else {
+		echo "User schon vorhanden.";	
+	}
 	//keine Ergebnisse, die zu betrachten wären
 
 	//Verbindung schließen

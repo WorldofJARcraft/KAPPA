@@ -57,10 +57,12 @@ public class EinkaufActivity extends Activity {
             public void processFinish(String output, String url) {
                 ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
                 prog.setVisibility(View.GONE);
-                String[] angaben =output.split("\\|");
                 LinearLayout layout = (LinearLayout) findViewById(R.id.einkaufsliste);
                 layout.removeAllViews();
                 einkäufe = new ArrayList<>();
+                if(!output.isEmpty()){
+                String[] angaben =output.split("\\|");
+
                 for(String einkauf:angaben){
                     String[] teile = einkauf.split(";");
                     einkäufe.add(new Pair<Integer, String>(Integer.parseInt(teile[0]),teile[1]));
@@ -110,6 +112,7 @@ public class EinkaufActivity extends Activity {
                     layout.addView(hor);*/
                     layout.addView(v);
                     layout.addView(s);
+                }
                 }
             }
         };
@@ -164,6 +167,7 @@ public class EinkaufActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(!input.getText().toString().isEmpty()){
                 String url = "https://worldofjarcraft.ddns.net/kappa/neuer_Einkauf.php?mail="+data.mail+"&pw="+data.pw+"&name="+input.getText().toString().replaceAll(" ","%20");
                 HTTP_Connection login = new HTTP_Connection(url,2);
                 AsyncResponse response = new AsyncResponse() {
@@ -184,6 +188,9 @@ public class EinkaufActivity extends Activity {
                 login.execute();
                 ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
                 prog.setVisibility(View.VISIBLE);
+                }
+                else
+                    Toast.makeText(EinkaufActivity.this,R.string.name_leer,Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
