@@ -3,7 +3,7 @@
     package="net.ddns.worldofjarcraft.kappa">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -46,7 +46,15 @@
         <activity
             android:name=".AblaufendActivity"
             android:label="@string/title_activity_ablaufend"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
+        <receiver
+            android:name=".BootCompleted"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

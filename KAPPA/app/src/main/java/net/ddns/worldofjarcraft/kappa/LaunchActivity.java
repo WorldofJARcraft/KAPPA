@@ -149,7 +149,24 @@ public class LaunchActivity extends AppCompatActivity {
         butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startService(mServiceIntent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+                builder.setMessage(R.string.ueberwachung_gestartet);
+                builder.setTitle(R.string.ueberwachung_starten);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        startService(mServiceIntent);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }
+                );
+                builder.show().show();
             }
         });
 

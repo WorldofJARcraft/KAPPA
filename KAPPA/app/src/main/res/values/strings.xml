@@ -195,4 +195,6 @@
     <string name="ablaufende_LM">Diese Lebensmittel sind bereits abgelaufen oder laufen in  mindestens 7 Tagen ab:</string>
     <string name="ablaufen_title">KAPPA - Ablaufende Lebensmittel</string>
     <string name="schrank">Kühlschrank</string>
+    <string name="ueberwachung_starten">KAPPA-Haltbarkeitsüberwachung starten?</string>
+    <string name="ueberwachung_laeuft">Haltbarkeitsüberwachung läuft.</string>
 </resources>
