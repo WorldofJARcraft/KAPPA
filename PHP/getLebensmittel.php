@@ -77,7 +77,7 @@ function neuerUser ($connection) {
    //Ergebnisse leeren
 	$result->free();
 	if(!empty($nummer)){
-	$sqlStmt = "SELECT * FROM `Lebensmittel` WHERE Fach='".$fach."'";
+	$sqlStmt = "SELECT * FROM `Lebensmittel` WHERE Fach='".$fach."' AND Besitzer='".$_GET["mail"]."'";
 	$result =  mysqli_query($connection,$sqlStmt);
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)

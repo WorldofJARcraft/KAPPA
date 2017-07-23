@@ -265,7 +265,7 @@ public class InhaltActivity extends Activity{
                 int akt = 0;
                 for(String fach:neuefaecher){
                     String[] werte = fach.split(";");
-                    if(werte.length==2){
+                    if(werte.length>=2){
                     Pair<Integer,String> fa = new Pair<>(new Integer(werte[0]),werte[1]);
                     faecher.add(fa);
                     menu.add(0, akt, Menu.NONE, werte[1]).setIcon(R.mipmap.icon).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

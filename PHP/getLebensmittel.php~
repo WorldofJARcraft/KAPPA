@@ -5,6 +5,8 @@
 require_once("Conf.php");
 //Datenbankverbindung aufbauen
 $connection = mysqli_connect($host,$user,$passwort,$datenbank);
+mysql_query("SET NAMES 'utf8'");
+mysql_query("SET CHARACTER SET 'utf8'");
 //auf Fehler prüfen
 if (mysqli_connect_errno()) {
     echo mysql_errno($connection) . ": " . mysql_error($connection). "\n";

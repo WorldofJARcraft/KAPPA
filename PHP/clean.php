@@ -24,7 +24,7 @@ function neuerUser ($connection) {
 	$result =  mysqli_query($connection,$sqlStmt);
 	$sqlStmt = "DELETE FROM `Fach` WHERE Kuehlschrank IS NULL;";
 	$result =  mysqli_query($connection,$sqlStmt);  
-	$sqlStmt = "DELETE FROM `Lebensmittel` WHERE Fach IS NULL;";
+	$sqlStmt = "DELETE FROM `Lebensmittel` WHERE Fach IS NULL OR Besitzer IS NULL;";
 	$result =  mysqli_query($connection,$sqlStmt);  
   //Abfrage vorbereiten
 	

@@ -187,4 +187,12 @@
     <string name="user_schon_vorhanden">Die eingegebene E-Mail-Adresse ist bereits vorhanden. Bitte melden Sie sich an oder nutzen ggf. die Funktion "Passwort vergessen".</string>
     <string name="name_leer">Der Name des Einkaufs ist leer. Dies kann zu Problemen führen. Bitte geben Sie einen Namen ein.</string>
     <string name="erst_fach">Sie müssen erst ein Fach anlegen, bevor Sie Lebensmittel speichern können!</string>
+    <string name="start_Daemon">Haltbarkeitsüberwachung starten</string>
+    <string name="title_activity_ablaufend">AblaufendActivity</string>
+    <string name="titel_notif">KAPPA Haltbarkeitsüberwachung</string>
+    <string name="inhalt_notif">Lebensmittel sind noch maximal eine Woche haltbar oder bereits abgelaufen.</string>
+    <string name="ueberwachung_gestartet">Die KAPPA Haltbarkeitsüberwachung überprüft automatisch regelmäßig die Haltbarkeit sämtlicher gespeicherter Lebensmittel und warnt, wenn Lebensmittel in weniger als 7 Tagen verfallen oder bereits abgelaufen sind.</string>
+    <string name="ablaufende_LM">Diese Lebensmittel sind bereits abgelaufen oder laufen in  mindestens 7 Tagen ab:</string>
+    <string name="ablaufen_title">KAPPA - Ablaufende Lebensmittel</string>
+    <string name="schrank">Kühlschrank</string>
 </resources>

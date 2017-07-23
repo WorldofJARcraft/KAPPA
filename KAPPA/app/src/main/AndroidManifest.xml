@@ -40,6 +40,13 @@
             android:name=".SucheActivity"
             android:label="@string/title_activity_suche"
             android:theme="@style/AppTheme" />
+
+        <service android:name=".MHDCheckerService" />
+
+        <activity
+            android:name=".AblaufendActivity"
+            android:label="@string/title_activity_ablaufend"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
