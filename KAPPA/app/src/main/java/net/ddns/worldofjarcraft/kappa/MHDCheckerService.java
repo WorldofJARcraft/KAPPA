@@ -156,6 +156,8 @@ public class MHDCheckerService extends Service {
                                         Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
                                         Bundle b = new Bundle();
                                         DataHelper helper = new DataHelper(ablaufend);
+                                        data.ablaufende=ablaufend;
+                                        CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
                                         b.putSerializable("lebensmittel",helper);
                                         intent.putExtras(b);
 // use System.currentTimeMillis() to have a unique ID for the pending intent

@@ -205,4 +205,8 @@ public class SchrankActivity extends Activity {
 
         builder.show();
     }
+
+    public void back(View v){
+        this.finish();
+    }
 }

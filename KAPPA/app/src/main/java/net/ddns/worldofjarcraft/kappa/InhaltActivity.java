@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
@@ -88,8 +89,7 @@ public class InhaltActivity extends Activity{
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                ladeLebensmittel();
-            }
+                            }
 
             @Override
             public void onDrawerStateChanged(int newState) {
@@ -106,7 +106,6 @@ public class InhaltActivity extends Activity{
         });
         menu.bringToFront();
         ladeFaecher();
-        ladeLebensmittel();
        /* mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -259,6 +258,14 @@ public class InhaltActivity extends Activity{
                 faecher = new ArrayList<>();
                 NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
                 TextView view = navigationView.findViewById(R.id.drawerHeaderTitle);
+                ImageButton close = navigationView.findViewById(R.id.closeMenuButton);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                layout.closeDrawer(GravityCompat.START);
+            }
+        });
                 view.setText(name);
                 Menu menu = navigationView.getMenu();
                 menu.removeGroup(0);
@@ -284,7 +291,7 @@ public class InhaltActivity extends Activity{
                     aktFach = menu.getItem(0);
                     open(menu.getItem(0));
                 }
-                menu.add(0, akt, Menu.NONE, R.string.neues_Fach).setIcon(R.mipmap.ic_launcher).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                menu.add(0, akt, Menu.NONE, R.string.neues_Fach).setIcon(R.drawable.plus).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         System.out.println("Fach hinzufügen...");
@@ -542,8 +549,10 @@ MenuItem aktFach;
         bar.setVisibility(View.VISIBLE);
         ladeFaecher();
     }
-    public void ladeLebensmittel(){
 
-    }
+
+        public void back(View view) {
+            this.finish();
+        }
 
 }

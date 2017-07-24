@@ -1,6 +1,7 @@
 package net.ddns.worldofjarcraft.kappa;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -202,5 +203,9 @@ public class EinkaufActivity extends Activity {
         });
 
         builder.show();
+    }
+
+    public void back(View view){
+       this.finish();
     }
 }

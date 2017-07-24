@@ -3,7 +3,8 @@
     package="net.ddns.worldofjarcraft.kappa">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -46,7 +47,8 @@
         <activity
             android:name=".AblaufendActivity"
             android:label="@string/title_activity_ablaufend"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
         <receiver
             android:name=".BootCompleted"
             android:enabled="true"
@@ -55,6 +57,25 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <service android:name=".MyWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+        <provider
+            android:authorities="net.ddns.worldofjarcraft.kappa"
+            android:name=".MyContentProvider"
+            android:exported="false"></provider>
+        <receiver
+            android:name=".CollectionAppWidgetProvider"
+            android:label="HAALLO!!!" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.indiandollar.apps.todoappcollectionwidget.app.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/collection_widget" />
+        </receiver>
+
+        <service android:name=".MyWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
     </application>
 
 </manifest>

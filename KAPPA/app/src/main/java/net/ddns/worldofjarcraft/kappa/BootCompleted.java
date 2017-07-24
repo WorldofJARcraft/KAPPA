@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 
 import static android.content.Context.MODE_PRIVATE;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.autostart_name;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
@@ -40,8 +41,14 @@ public class BootCompleted extends BroadcastReceiver{
             );
             builder.show().show();
             */
-            Intent serviceIntent = new Intent(context, MHDCheckerService.class);
-            context.startService(serviceIntent);
+            SharedPreferences pref = context.getSharedPreferences(login_name,MODE_PRIVATE);
+            if(pref.contains(autostart_name)){
+                if(pref.getBoolean(autostart_name,false)){
+                    Intent serviceIntent = new Intent(context, MHDCheckerService.class);
+                    context.startService(serviceIntent);
+                }
+            }
+
         }
     }
 }

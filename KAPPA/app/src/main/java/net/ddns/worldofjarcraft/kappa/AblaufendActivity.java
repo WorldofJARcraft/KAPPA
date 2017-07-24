@@ -1,6 +1,7 @@
 package net.ddns.worldofjarcraft.kappa;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -124,6 +125,9 @@ public class AblaufendActivity extends Activity {
             }
         }
 
+    }
+    public void back(View view){
+        startActivity(new Intent(this, LaunchActivity.class));
     }
 
 }

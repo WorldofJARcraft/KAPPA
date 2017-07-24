@@ -176,4 +176,8 @@ public class SucheActivity extends Activity {
         conn.delegate=response;
         conn.execute("params");
     }
+
+    public void back(View v){
+        this.finish();
+    }
 }

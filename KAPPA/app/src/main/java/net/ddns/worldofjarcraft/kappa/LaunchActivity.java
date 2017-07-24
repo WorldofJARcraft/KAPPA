@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -212,11 +213,19 @@ public class LaunchActivity extends AppCompatActivity {
             };
             conn.execute("params");
         }
-
         else{
             System.out.println("Frage Nutzerdaten an!");
             setTheme(R.style.AppTheme);
             startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
+        }
+        if(login.contains(autostart_name)){
+            CheckBox auto = (CheckBox) findViewById(R.id.autostart_ueberwachung);
+            auto.setChecked(login.getBoolean(autostart_name,false));
+            if(login.getBoolean(autostart_name,false)){
+                mServiceIntent = new Intent(getApplicationContext(), MHDCheckerService.class);
+                mServiceIntent.setData(Uri.EMPTY);
+                startService(mServiceIntent);
+            }
         }
         //beendet Anzeige des Splash
         setTheme(R.style.AppTheme);
@@ -239,4 +248,22 @@ public class LaunchActivity extends AppCompatActivity {
         startActivity(new Intent(this,EinkaufActivity.class));
     }
     public void schraenke(){startActivity(new Intent(this, SchrankActivity.class));}
+
+    public void back(View view){
+        this.finish();
+    }
+    public final static String autostart_name = "autostart";
+    public void autostart_service(View view){
+        if(view instanceof CheckBox){
+            CheckBox box = (CheckBox) view;
+            if(box.isChecked()){
+                startService(mServiceIntent);
+            }
+                SharedPreferences login = getSharedPreferences(login_name,MODE_PRIVATE);
+                SharedPreferences.Editor editor = login.edit();
+                editor.putBoolean(autostart_name,box.isChecked());
+                editor.commit();
+
+        }
+    }
 }
