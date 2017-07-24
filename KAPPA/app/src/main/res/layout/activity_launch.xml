@@ -44,18 +44,19 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
     <Button
         android:id="@+id/schraenkeButton"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@mipmap/icon"
-        android:drawableRight="@drawable/pfeil_rechts"
-        android:text="@string/zu_schrank"
-        android:layout_marginTop="38dp"
-        android:layout_below="@+id/einkaufButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/einkaufButton"
+        android:layout_marginTop="38dp"
+        android:drawableLeft="@mipmap/icon"
+        android:text="@string/zu_schrank"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/einkaufButton"
@@ -67,34 +68,35 @@
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="44dp"
         android:drawableLeft="@drawable/einkauf"
-        android:drawableRight="@drawable/pfeil_rechts"
-        android:text="@string/zur_EInkausliste" />
+        android:text="@string/zur_EInkausliste"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/logoffButton"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/user"
-        android:drawableRight="@drawable/pfeil_rechts"
-        android:text="@string/zu_Login"
-        android:layout_marginTop="55dp"
-        android:layout_below="@+id/autostart_ueberwachung"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/autostart_ueberwachung"
+        android:layout_marginTop="55dp"
+        android:drawableLeft="@drawable/user"
+        android:text="@string/zu_Login"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/startDaemon"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/schraenkeButton"
         android:layout_marginTop="50dp"
         android:drawableLeft="@drawable/reload"
         android:text="@string/start_Daemon"
         android:textAlignment="center"
-        android:layout_below="@+id/schraenkeButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="24sp" />
 
     <CheckBox
         android:id="@+id/autostart_ueberwachung"
@@ -107,7 +109,8 @@
         android:layout_marginTop="39dp"
         android:onClick="autostart_service"
         android:text="@string/ueberwachung_autostart"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp" />
 
 </RelativeLayout>
 </ScrollView>

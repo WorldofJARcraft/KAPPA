@@ -1,15 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorPrimaryDark</item>
-        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary_material_light</item>
+        <item name="colorPrimaryDark">@color/primary_dark_material_light</item>
+        <item name="colorAccent">@color/accent_material_light</item>
+        <item name="android:colorBackground">@color/material_grey_600</item>
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
+    <style name="ThemeOverlay.AppCompat.navTheme">
 
+        <!-- Color of text and icon when SELECTED -->
+        <item name="colorPrimary">@color/primary_dark_material_light</item>
+
+        <!-- Background color when SELECTED -->
+        <item name="colorControlHighlight">@color/colorAccent</item>
+
+    </style>
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>

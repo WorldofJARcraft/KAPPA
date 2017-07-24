@@ -109,6 +109,7 @@ public class MHDCheckerService extends Service {
                             conn.delegate = new AsyncResponse() {
                                 @Override
                                 public void processFinish(String output, String url) {
+                                    boolean fehler = false;
                                     if(!output.isEmpty()){
                                         ablaufend = new ArrayList<>();
                                         String[] lebensmittel = output.split("\\|");
@@ -147,56 +148,58 @@ public class MHDCheckerService extends Service {
                                                 }
                                             }catch (Exception e){
                                                 e.printStackTrace();
+                                                fehler=true;
                                             }
                                         }
                                         //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
                                         // prepare intent which is triggered if the
 // notification is selected
-
-                                        Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
-                                        Bundle b = new Bundle();
-                                        DataHelper helper = new DataHelper(ablaufend);
-                                        data.ablaufende=ablaufend;
-                                        CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
-                                        b.putSerializable("lebensmittel",helper);
-                                        intent.putExtras(b);
+                                        if(!fehler) {
+                                            Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
+                                            Bundle b = new Bundle();
+                                            DataHelper helper = new DataHelper(ablaufend);
+                                            data.ablaufende = ablaufend;
+                                            CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
+                                            b.putSerializable("lebensmittel", helper);
+                                            intent.putExtras(b);
 // use System.currentTimeMillis() to have a unique ID for the pending intent
-                                        PendingIntent pIntent = PendingIntent.getActivity(MHDCheckerService.this, (int) System.currentTimeMillis(), intent, 0);
+                                            PendingIntent pIntent = PendingIntent.getActivity(MHDCheckerService.this, (int) System.currentTimeMillis(), intent, 0);
 
 // build notification
 // the addAction re-use the same intent to keep the example short
-                                        NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(MHDCheckerService.this);
-                                        mBuilder.setContentTitle(getResources().getString(R.string.titel_notif))
-                                                .setContentText(ablaufend.size()+" "+getResources().getString(R.string.inhalt_notif))
-                                                .setSmallIcon(R.mipmap.icon)
-                                                .setAutoCancel(false)
-                                                .setStyle(new NotificationCompat.BigTextStyle().bigText(mBuilder.mContentText));
+                                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MHDCheckerService.this);
+                                            mBuilder.setContentTitle(getResources().getString(R.string.titel_notif))
+                                                    .setContentText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif))
+                                                    .setSmallIcon(R.mipmap.icon)
+                                                    .setAutoCancel(false)
+                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(mBuilder.mContentText));
 // Creates an explicit intent for an Activity in your app
-                                        Intent resultIntent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
+                                            Intent resultIntent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
 // your application to the Home screen.
-                                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(MHDCheckerService.this);
+                                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(MHDCheckerService.this);
 // Adds the back stack for the Intent (but not the Intent itself)
-                                        stackBuilder.addParentStack(AblaufendActivity.class);
+                                            stackBuilder.addParentStack(AblaufendActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
-                                        stackBuilder.addNextIntent(intent);
-                                        PendingIntent resultPendingIntent =
-                                                stackBuilder.getPendingIntent(
-                                                        0,
-                                                        PendingIntent.FLAG_UPDATE_CURRENT
-                                                );
-                                        mBuilder.setContentIntent(resultPendingIntent);
-                                        NotificationManager mNotificationManager =
-                                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                            stackBuilder.addNextIntent(intent);
+                                            PendingIntent resultPendingIntent =
+                                                    stackBuilder.getPendingIntent(
+                                                            0,
+                                                            PendingIntent.FLAG_UPDATE_CURRENT
+                                                    );
+                                            mBuilder.setContentIntent(resultPendingIntent);
+                                            NotificationManager mNotificationManager =
+                                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 // mNotificationId is a unique integer your app uses to identify the
 // notification. For example, to cancel the notification, you can pass its ID
 // number to NotificationManager.cancel().
-                                        mNotificationManager.cancel(mNotificationId);
-                                        mNotificationManager.notify(mNotificationId, mBuilder.build());
+                                            mNotificationManager.cancel(mNotificationId);
+                                            mNotificationManager.notify(mNotificationId, mBuilder.build());
+                                        }
                                     }
                                 }
                             };

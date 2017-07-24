@@ -152,7 +152,8 @@
         android:layout_gravity="start"
         app:itemTextAppearance="@style/MenuItems"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/menu_inhalt">
+        app:menu="@menu/menu_inhalt"
+        android:theme="@style/ThemeOverlay.AppCompat.navTheme">
 
     </android.support.design.widget.NavigationView>
 

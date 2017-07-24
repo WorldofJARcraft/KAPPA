@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menuInhalt"
     android:actionViewClass="android.view.Menu"
-    app:showAsAction="ifRoom|withText">
+    app:showAsAction="ifRoom|withText"
+    >
     <group android:checkableBehavior="single">
         <!--
                 Add menu items here
