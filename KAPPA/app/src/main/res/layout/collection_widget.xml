@@ -15,11 +15,11 @@
             android:id="@+id/widgetTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/widget_title_min_height"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/MycolorPrimary"
             android:gravity="center"
             android:text="@string/ablaufend"
             android:textAllCaps="true"
-            android:textColor="#ffffff"
+            android:textColor="@color/MycolorAccent"
             android:textSize="18dp" />
     </FrameLayout>
 

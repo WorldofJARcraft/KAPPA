@@ -70,7 +70,7 @@ public class EinkaufActivity extends Activity {
                     TextView v = new TextView(EinkaufActivity.this);
                     v.setText(teile[1]);
                     v.setTextSize(24);
-                    v.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    v.setTextColor(getResources().getColor(R.color.black));
                     v.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {

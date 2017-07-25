@@ -90,7 +90,7 @@ public class AblaufendActivity extends Activity {
                 if (attribute[2].equals(getResources().getString(R.string.abgelaufen)))
                     i3.setTextColor(Color.RED);
                 else
-                    i3.setTextColor(Color.YELLOW);
+                    i3.setTextColor(getResources().getColor(R.color.ORANGE));
                 TextView i4 = new TextView(this);
                 i4.setText(attribute[3]);
                 i4.setTextSize(24);

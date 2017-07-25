@@ -91,12 +91,12 @@
         style="@style/Widget.Design.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView4"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/einkaufsliste"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        app:srcCompat="@drawable/plus" />
 
     <TextView
         android:id="@+id/textView4"
@@ -108,18 +108,18 @@
         android:layout_marginTop="13dp"
         android:text="@string/einkaeufe"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/MycolorAccent"
         android:textSize="24sp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/reloadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView4"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/reload"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        app:srcCompat="@drawable/ic_sync_black_24dp" />
 
 </RelativeLayout>

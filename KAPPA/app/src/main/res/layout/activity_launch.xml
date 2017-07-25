@@ -4,10 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.ddns.worldofjarcraft.kappa.LaunchActivity">
+    tools:context="net.ddns.worldofjarcraft.kappa.LaunchActivity"
+    android:gravity="center_horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/sinnlosesLayout">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/einkaufButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/einkauf" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -41,62 +60,10 @@
                 android:layout_weight="1"
                 android:text="@string/main_title"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="22sp" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
-    <Button
-        android:id="@+id/schraenkeButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/einkaufButton"
-        android:layout_marginTop="38dp"
-        android:drawableLeft="@mipmap/icon"
-        android:text="@string/zu_schrank"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/einkaufButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="44dp"
-        android:drawableLeft="@drawable/einkauf"
-        android:text="@string/zur_EInkausliste"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/logoffButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/autostart_ueberwachung"
-        android:layout_marginTop="55dp"
-        android:drawableLeft="@drawable/user"
-        android:text="@string/zu_Login"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/startDaemon"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/schraenkeButton"
-        android:layout_marginTop="50dp"
-        android:drawableLeft="@drawable/reload"
-        android:text="@string/start_Daemon"
-        android:textAlignment="center"
-        android:textSize="24sp" />
 
     <CheckBox
         android:id="@+id/autostart_ueberwachung"
@@ -105,12 +72,107 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/startDaemon"
-        android:layout_marginTop="39dp"
+        android:layout_below="@+id/textView6"
+        android:layout_marginTop="25dp"
+        android:foregroundGravity="center"
         android:onClick="autostart_service"
         android:text="@string/ueberwachung_autostart"
-        android:textColor="@color/colorAccent"
-        android:textSize="24sp" />
+        android:textColor="@color/MycolorPrimaryDark"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/zur_EInkausliste"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:layout_below="@+id/einkaufButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/schraenkeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@mipmap/icon"
+        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/einkaufButton"
+        android:layout_alignStart="@+id/einkaufButton" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/schraenkeButton"
+        android:layout_marginTop="16dp"
+        android:text="@string/zu_schrank"
+        android:textAlignment="center"
+        android:textSize="22sp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/startDaemon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_notifications_black_24dp"
+        android:layout_below="@+id/textView5"
+        android:layout_alignLeft="@+id/schraenkeButton"
+        android:layout_alignStart="@+id/schraenkeButton" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/start_Daemon"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:layout_below="@+id/startDaemon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/logoffButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/user"
+        android:layout_below="@+id/autostart_ueberwachung"
+        android:layout_alignLeft="@+id/startDaemon"
+        android:layout_alignStart="@+id/startDaemon"
+        android:layout_marginTop="16dp" />
+
+
 
 </RelativeLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25sp"
+            android:id="@+id/sinnloserSpace"
+            android:layout_above="@+id/sinnlosesLayout"
+            />
+
+        <TextView
+            android:id="@+id/sinnloserText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/sinnlo"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/zu_Login"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
 </ScrollView>

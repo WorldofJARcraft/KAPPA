@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -131,22 +132,22 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         setTheme(R.style.SplashTheme);
-        final Button logoff = (Button) findViewById(R.id.logoffButton);
+        final FloatingActionButton logoff = (FloatingActionButton) findViewById(R.id.logoffButton);
         logoff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 logoff();
             }
         });
-        final Button einkaufButton = (Button) findViewById(R.id.einkaufButton);
+        final FloatingActionButton einkaufButton = (FloatingActionButton) findViewById(R.id.einkaufButton);
         einkaufButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 einkauf();
             }
         });
-        final Button button = (Button) findViewById(R.id.schraenkeButton);
-        Button butt = (Button) findViewById(R.id.startDaemon);
+        final FloatingActionButton button = (FloatingActionButton) findViewById(R.id.schraenkeButton);
+        FloatingActionButton butt = (FloatingActionButton) findViewById(R.id.startDaemon);
         butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

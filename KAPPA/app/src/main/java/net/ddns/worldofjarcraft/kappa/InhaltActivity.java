@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -67,6 +68,29 @@ public class InhaltActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inhalt);
+        int[][] state = new int[][] {
+                new int[] {android.R.attr.state_checked}, // checked
+                new int[] {-android.R.attr.state_checked}
+        };
+
+        int[] color = new int[] {
+                getResources().getColor(R.color.MycolorAccent),
+                (Color.BLACK)
+        };
+
+        ColorStateList csl = new ColorStateList(state, color);
+
+        int[][] state2 = new int[][] {
+                new int[] {android.R.attr.state_checked}, // checked
+                new int[] {-android.R.attr.state_checked}
+        };
+
+        int[] color2 = new int[] {
+                getResources().getColor(R.color.MycolorAccent),
+                (Color.GRAY)
+        };
+
+        ColorStateList csl2 = new ColorStateList(state2, color2);
         ProgressBar bar = findViewById(R.id.progressBarInhalt);
         bar.bringToFront();
         bar.setVisibility(View.VISIBLE);
@@ -131,6 +155,10 @@ public class InhaltActivity extends Activity{
         });
         button2.bringToFront();
         bar.setVisibility(View.GONE);
+        NavigationView nav = findViewById(R.id.navigation);
+        nav.setItemTextColor(csl);
+        nav.setItemIconTintList(csl2);
+
     }
 
     private void deleteFach(MenuItem aktFach) {
@@ -424,10 +452,10 @@ MenuItem aktFach;
                                     text+=cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
                                 i3.setText(text);
                                 if(cal.get(Calendar.YEAR)-1970==0&&!text.contains(getResources().getString(R.string.monate))&&cal.get(Calendar.DAY_OF_MONTH)<8){
-                                    i3.setTextColor(Color.YELLOW);
+                                    i3.setTextColor(getResources().getColor(R.color.ORANGE));
                                 }
                                 else
-                                i3.setTextColor(Color.GREEN);
+                                i3.setTextColor(getResources().getColor(R.color.DRAKGREEN));
                             }
                             else{
                                 i3.setText(R.string.abgelaufen);

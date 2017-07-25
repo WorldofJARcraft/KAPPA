@@ -78,43 +78,46 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="17dp" />
 
-    <Button
-        android:id="@+id/signin"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_in"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_below="@+id/save"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/signin"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/save"
+            android:layout_centerVertical="true"
+            android:text="@string/sign_in"
+            android:textColor="#363636"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
-        android:id="@+id/signup"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_up"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="243dp"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/signin"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/signup"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/signin"
+            android:layout_marginTop="25dp"
+            android:text="@string/sign_up"
+            android:textColor="#363636"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="243dp" />
 
-    <Button
-        android:id="@+id/vergessen"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/forgot_PW"
-        android:layout_below="@+id/signup"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="19dp" />
+        <Button
+            android:id="@+id/vergessen"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/signup"
+            android:layout_marginTop="19dp"
+            android:text="@string/forgot_PW"
+            android:textColor="#363636" />
 
     <Space
         android:layout_width="match_parent"

@@ -43,30 +43,32 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/neuerSchrank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView"
         android:layout_marginEnd="64dp"
         android:layout_marginRight="64dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@mipmap/icon"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        app:srcCompat="@drawable/plus" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/reloadSchraenke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_marginLeft="63dp"
+        android:layout_marginStart="63dp"
+        android:layout_toEndOf="@+id/prog_schrank"
+        android:layout_toRightOf="@+id/prog_schrank"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/reload"
-        android:layout_below="@+id/textView"
-        android:layout_toRightOf="@+id/prog_schrank"
-        android:layout_toEndOf="@+id/prog_schrank"
-        android:layout_marginLeft="63dp"
-        android:layout_marginStart="63dp" />
+        app:srcCompat="@drawable/ic_sync_black_24dp" />
     <ScrollView
         android:id="@+id/schraenke"
         style="@android:style/Widget.Holo.ScrollView"
@@ -107,6 +109,6 @@
         android:layout_toRightOf="@+id/prog_schrank"
         android:text="@string/info_schraenke"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/MycolorAccent"
         android:textSize="24sp" />
 </RelativeLayout>

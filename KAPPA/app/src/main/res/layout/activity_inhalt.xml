@@ -56,22 +56,22 @@
                 android:id="@+id/floatingActionButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/Info_Fach"
+                android:layout_centerHorizontal="true"
                 android:clickable="true"
                 app:fabSize="normal"
-                app:srcCompat="@drawable/reload"
-                android:layout_below="@+id/Info_Fach"
-                android:layout_centerHorizontal="true" />
+                app:srcCompat="@drawable/ic_sync_black_24dp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/floatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/Info_Fach"
                 android:clickable="true"
                 app:fabSize="normal"
-                app:srcCompat="@drawable/food"
-                android:layout_below="@+id/Info_Fach"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                app:srcCompat="@drawable/plus" />
 
             <ScrollView
                 android:id="@+id/scrollView3"
