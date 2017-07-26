@@ -56,25 +56,49 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".MyWidgetRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+
+        <service
+            android:name=".MyWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <provider
-            android:authorities="net.ddns.worldofjarcraft.kappa"
             android:name=".MyContentProvider"
-            android:exported="false"></provider>
+            android:authorities="net.ddns.worldofjarcraft.kappa"
+            android:exported="false" />
         <receiver
             android:name=".CollectionAppWidgetProvider"
-            android:label="HAALLO!!!" >
+            android:label="@string/name_ablaufend_activity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.indiandollar.apps.todoappcollectionwidget.app.ACTION_DATA_UPDATED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/collection_widget" />
+    </receiver>
+
+        <service
+            android:name=".InhaltWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".SchrankUpdaterService" />
+
+        <receiver android:name=".InhaltWidget"
+            android:label="@string/widget_inhalt">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/inhalt_widget_info" />
         </receiver>
 
-        <service android:name=".MyWidgetRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+        <activity android:name=".InhaltWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

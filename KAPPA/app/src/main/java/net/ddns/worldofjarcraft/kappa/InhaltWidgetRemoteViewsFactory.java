@@ -3,35 +3,41 @@ package net.ddns.worldofjarcraft.kappa;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.util.Pair;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * Created by Eric on 24.07.2017.
  */
 
-public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     public List<String[]> daten;
-    public AbgelaufenWidgetRemoteViewsFactory(Context context, Intent intent){
+    public String schrank = null;
+    public String fach = null;
+    public int RELOAD_MILLIS = 10000;
+    public InhaltWidgetRemoteViewsFactory(Context context, Intent intent){
         mContext = context;
+        schrank = intent.getStringExtra(InhaltWidget.KEY_SCHRANK);
+        fach = intent.getStringExtra(InhaltWidget.KEY_FACH);
     }
+    android.os.Handler handler;
+
+    Pair<String,String> params;
     @Override
     public void onCreate() {
-        daten = data.ablaufende;
-        if(daten==null) {
-            daten = new ArrayList<>();
-            daten.add(new String[]{"Nichts anzuzeigen"});
-        }
+        daten = new ArrayList<>();
     }
 
     @Override
     public void onDataSetChanged() {
         final long identityToken = Binder.clearCallingIdentity();
-        daten = data.ablaufende;
         Binder.restoreCallingIdentity(identityToken);
     }
 
@@ -42,32 +48,32 @@ public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.Re
 
     @Override
     public int getCount() {
+        fillDaten();
         if(daten!=null)
         return daten.size();
         else return  0;
     }
-
+    private void fillDaten(){
+        daten = new ArrayList<>();
+        if(data.alle_lebensmittel!=null){
+            for(String[] lm:data.alle_lebensmittel){
+                if(lm.length>4&&lm[4].equals(schrank)&&lm[3].equals(fach))
+                    daten.add(lm);
+            }
+        }
+    }
     @Override
     public RemoteViews getViewAt(int i) {
-        if(i<0||i>=daten.size())
+        fillDaten();
+        if(i<0||daten==null||i>=daten.size())
         return null;
         else {
-            if(daten!=null){
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.collection_widget_list_item);
-            rv.setTextViewText(R.id.widgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
-            Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
-            rv.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent);
-            return rv;}
-        else {
             RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
-            rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel, mContext.getResources().getString(R.string.service_aus));
+            rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
             Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(InhaltWidget.EXTRA_LABEL, "");
+            fillInIntent.putExtra(InhaltWidget.EXTRA_LABEL, daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
             rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
-            return rv;
-        }
-        }
+            return rv;}
     }
 
     @Override

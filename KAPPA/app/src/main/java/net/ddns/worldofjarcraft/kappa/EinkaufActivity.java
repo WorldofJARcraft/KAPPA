@@ -71,6 +71,7 @@ public class EinkaufActivity extends Activity {
                     v.setText(teile[1]);
                     v.setTextSize(24);
                     v.setTextColor(getResources().getColor(R.color.black));
+                    v.setBackgroundResource(R.drawable.textviewstyle);
                     v.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {

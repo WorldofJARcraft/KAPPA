@@ -21,4 +21,10 @@ public final class data {
      * Liste mit den Namen ablaufender Lebensmittel und weiteren Werten.
      */
     public static ArrayList<String[]> ablaufende;
+
+    /**
+     * Speichert alle Lebensmittel des Benutzers.
+     * Format: zuerst Index, dann Name, dann Zahl, dann String zur Haltbarkeit, dann String mit Fachname, dann String mit Kühlschrankname
+     */
+    public static ArrayList<String[]> alle_lebensmittel;
 }

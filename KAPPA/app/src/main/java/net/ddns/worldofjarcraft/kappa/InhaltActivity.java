@@ -303,7 +303,7 @@ public class InhaltActivity extends Activity{
                     if(werte.length>=2){
                     Pair<Integer,String> fa = new Pair<>(new Integer(werte[0]),werte[1]);
                     faecher.add(fa);
-                    menu.add(0, akt, Menu.NONE, werte[1]).setIcon(R.mipmap.icon).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(0, akt, Menu.NONE, werte[1]).setIcon(R.mipmap.schnee).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             System.out.println("Menü geklickt...");
@@ -427,12 +427,15 @@ MenuItem aktFach;
                     TextView i1= new TextView(InhaltActivity.this);
                     i1.setText(attribute[1]);
                     i1.setTextSize(24);
+                        i1.setBackgroundResource(R.drawable.textviewstyle);
                     TextView i2= new TextView(InhaltActivity.this);
                     i2.setText(attribute[2]);
                         i2.setTextSize(24);
+                        i2.setBackgroundResource(R.drawable.textviewstyle);
                     TextView i3= new TextView(InhaltActivity.this);
                     i3.setText(R.string.keine_Angabe);
                         i3.setTextSize(24);
+                        i3.setBackgroundResource(R.drawable.textviewstyle);
                     try {
                         Long mhd = new Long(attribute[3]);
                         if(mhd>0){

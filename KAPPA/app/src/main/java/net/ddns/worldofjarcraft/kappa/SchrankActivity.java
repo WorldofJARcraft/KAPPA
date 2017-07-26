@@ -60,6 +60,7 @@ public class SchrankActivity extends Activity {
                     v.setText(attribute[1]);
                     v.setTextSize(24);
                     v.setTextColor(getResources().getColor(R.color.black));
+                    v.setBackgroundResource(R.drawable.textviewstyle);
                     v.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {

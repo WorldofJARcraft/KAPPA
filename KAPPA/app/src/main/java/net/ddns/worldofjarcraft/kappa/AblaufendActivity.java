@@ -81,12 +81,15 @@ public class AblaufendActivity extends Activity {
                 TextView i1 = new TextView(this);
                 i1.setText(attribute[0]);
                 i1.setTextSize(24);
+                i1.setBackgroundResource(R.drawable.textviewstyle);
                 TextView i2 = new TextView(this);
                 i2.setText(attribute[1]);
                 i2.setTextSize(24);
+                i2.setBackgroundResource(R.drawable.textviewstyle);
                 TextView i3 = new TextView(this);
                 i3.setText(attribute[2]);
                 i3.setTextSize(24);
+                i3.setBackgroundResource(R.drawable.textviewstyle);
                 if (attribute[2].equals(getResources().getString(R.string.abgelaufen)))
                     i3.setTextColor(Color.RED);
                 else
@@ -94,9 +97,11 @@ public class AblaufendActivity extends Activity {
                 TextView i4 = new TextView(this);
                 i4.setText(attribute[3]);
                 i4.setTextSize(24);
+                i4.setBackgroundResource(R.drawable.textviewstyle);
                 TextView i5 = new TextView(this);
                 i5.setText(attribute[4]);
                 i5.setTextSize(24);
+                i5.setBackgroundResource(R.drawable.textviewstyle);
                 space = new Space(this);
                 space.setMinimumWidth(30);
                 space2 = new Space(this);

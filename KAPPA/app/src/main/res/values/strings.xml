@@ -275,4 +275,13 @@
     <string name="add_widget">Add widget</string>
     <string name="haltbarkeit">Haltbarkeit</string>
     <string name="ablaufend">Ablaufende / abgelaufene Lebensmittel</string>
+    <string name="configure">Configure</string>
+    <string name="config">Widget konfigurieren</string>
+    <string name="addwidget">Widget hinzufügen</string>
+    <string name="inhalte">Inhalte von Fach</string>
+    <string name="und">und</string>
+    <string name="name_ablaufend_activity">KAPPA - Ablaufende Lebensmittel</string>
+    <string name="aus">aus Kühlschrank</string>
+    <string name="service_aus">Für die Verwendung dieses Widgets ist die KAPPA Haltbarkeitsüberwachung nötig. Bitte starten Sie diese im Hauptmenü!</string>
+    <string name="widget_inhalt">KAPPA - Lebensmittel im gewählten Fach</string>
 </resources>
