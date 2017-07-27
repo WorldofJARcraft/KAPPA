@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import static android.content.Context.MODE_PRIVATE;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.autostart_name;
@@ -20,6 +21,9 @@ public class BootCompleted extends BroadcastReceiver{
         //we double check here for only boot complete event
         if(intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED))
         {
+            Intent serv = new Intent(context,SchrankUpdaterService.class);
+            Log.e("START","Kühlschrankservice gestartet!");
+            context.startService(serv);
             /*context.setTheme(R.style.AppTheme);
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.ueberwachung_gestartet);

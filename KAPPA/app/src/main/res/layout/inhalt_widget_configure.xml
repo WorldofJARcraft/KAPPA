@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/MycolorPrimaryDark">
+    android:background="@color/MycolorPrimary"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/add_button"
@@ -12,19 +12,21 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:background="@color/MycolorAccent"
         android:text="@string/addwidget"
+        android:textColor="@color/black"
         android:textSize="22sp" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/MycolorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,10 +51,10 @@
         android:id="@+id/schrankSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dialog"
-        android:layout_below="@+id/textView8"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView8"
+        android:spinnerMode="dialog" />
 
     <Spinner
         android:id="@+id/FachSpinner"
@@ -69,10 +71,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar3"
+        android:layout_below="@+id/spaceconfig"
         android:layout_marginTop="11dp"
         android:text="@string/schrank"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="22sp" />
 
     <TextView
@@ -85,6 +88,15 @@
         android:layout_marginTop="10dp"
         android:text="@string/fach"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="22sp" />
+
+    <Space
+        android:id="@+id/spaceconfig"
+        android:layout_width="match_parent"
+        android:layout_height="75sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar3" />
 
 </RelativeLayout>

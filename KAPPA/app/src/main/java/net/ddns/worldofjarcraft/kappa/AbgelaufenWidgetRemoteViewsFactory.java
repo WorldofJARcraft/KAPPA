@@ -9,6 +9,8 @@ import android.widget.RemoteViewsService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.ddns.worldofjarcraft.kappa.R.drawable.ablaufende;
+
 /**
  * Created by Eric on 24.07.2017.
  */
@@ -21,7 +23,7 @@ public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.Re
     }
     @Override
     public void onCreate() {
-        daten = data.ablaufende;
+        daten = MHDCheckerService.ablaufend;
         if(daten==null) {
             daten = new ArrayList<>();
             daten.add(new String[]{"Nichts anzuzeigen"});
@@ -31,7 +33,7 @@ public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.Re
     @Override
     public void onDataSetChanged() {
         final long identityToken = Binder.clearCallingIdentity();
-        daten = data.ablaufende;
+        daten = MHDCheckerService.ablaufend;
         Binder.restoreCallingIdentity(identityToken);
     }
 

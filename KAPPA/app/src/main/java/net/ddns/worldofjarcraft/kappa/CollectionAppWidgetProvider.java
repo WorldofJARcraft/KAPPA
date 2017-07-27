@@ -39,7 +39,7 @@ public class CollectionAppWidgetProvider extends AppWidgetProvider {
             // template to handle the click listener for each item
             Intent clickIntentTemplate = new Intent(context, AblaufendActivity.class);
             Bundle b = new Bundle(1);
-            DataHelper helper = new DataHelper(data.ablaufende);
+            DataHelper helper = new DataHelper(MHDCheckerService.ablaufend);
             b.putSerializable("lebensmittel",helper);
             clickIntentTemplate.putExtras(b);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)

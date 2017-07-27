@@ -62,7 +62,7 @@ public class InhaltWidgetConfigureActivity extends Activity {
                     R.layout.inhalt_widget);
 // This is equivalent to your ChecksWidgetProvider.updateAppWidget()
             appWidgetManager.updateAppWidget(mAppWidgetId, views);
-            InhaltWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+            InhaltWidget.sendRefreshBroadcast(context);
 // Destroy activity
             finish();
         }

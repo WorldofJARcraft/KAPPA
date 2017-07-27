@@ -284,4 +284,5 @@
     <string name="aus">aus Kühlschrank</string>
     <string name="service_aus">Für die Verwendung dieses Widgets ist die KAPPA Haltbarkeitsüberwachung nötig. Bitte starten Sie diese im Hauptmenü!</string>
     <string name="widget_inhalt">KAPPA - Lebensmittel im gewählten Fach</string>
+    <string name="service_neu_gestartet">Die Haltbarkeitsüberwachung wurde gestartet und informiert Sie über ablaufende Lebensmittel.</string>
 </resources>

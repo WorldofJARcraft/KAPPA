@@ -87,6 +87,7 @@
             android:label="@string/widget_inhalt">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.indiandollar.apps.todoappcollectionwidget.app.ACTION_DATA_UPDATED" />
             </intent-filter>
 
             <meta-data

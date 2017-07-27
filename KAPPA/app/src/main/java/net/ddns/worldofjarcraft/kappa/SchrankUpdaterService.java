@@ -13,12 +13,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.util.Pair;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
@@ -39,12 +42,13 @@ public class SchrankUpdaterService extends Service {
     }
     HashMap<Integer,String> schrankListe;
     HashMap<Integer,Pair<Integer,String>> fachListe;
-    ArrayList<String[]> ablaufend;
+    public static ArrayList<String[]> alle_lebensmittel;
 
     public void init(){
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
+                Log.e("SCHRANKSERVICE","LAUFE...");
                 HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+data.mail+"&pw="+data.pw);
                 conn.delegate = new AsyncResponse() {
                     @Override
@@ -98,7 +102,7 @@ public class SchrankUpdaterService extends Service {
                                 public void processFinish(String output, String url) {
                                     boolean fehler = false;
                                     if(!output.isEmpty()){
-                                        ablaufend = new ArrayList<>();
+                                        alle_lebensmittel = new ArrayList<>();
                                         String[] lebensmittel = output.split("\\|");
                                         for(String lm:lebensmittel){
                                             String[] werte = lm.split(";");
@@ -119,7 +123,7 @@ public class SchrankUpdaterService extends Service {
                                                             angaben[2] = cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
                                                             angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
                                                             angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
-                                                            ablaufend.add(angaben);
+                                                            alle_lebensmittel.add(angaben);
                                                     }
                                                     else{
                                                                 String[] angaben = new String[5];
@@ -128,7 +132,7 @@ public class SchrankUpdaterService extends Service {
                                                                 angaben[2] = getResources().getString(R.string.abgelaufen);
                                                                 angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
                                                                 angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
-                                                                ablaufend.add(angaben);
+                                                                alle_lebensmittel.add(angaben);
                                                             }
 
                                                 }
@@ -139,7 +143,7 @@ public class SchrankUpdaterService extends Service {
                                                             angaben[2] = getResources().getString(R.string.keine_Angabe);
                                                             angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
                                                             angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
-                                                            ablaufend.add(angaben);
+                                                            alle_lebensmittel.add(angaben);
                                                         }
                                             }catch (Exception e){
                                                 e.printStackTrace();
@@ -150,7 +154,11 @@ public class SchrankUpdaterService extends Service {
                                         // prepare intent which is triggered if the
 // notification is selected
                                         if(!fehler) {
-                                            data.alle_lebensmittel = ablaufend;
+                                            Log.e("RELOADING","Sending Broadcast");
+                                            MHDCheckerService.alle_lebensmittel = alle_lebensmittel;
+                                            for(String[] lm: alle_lebensmittel)
+                                                System.out.println(lm[0]);
+                                            InhaltWidget.sendRefreshBroadcast(context);
                                         }
                                     }
                                 }
@@ -218,6 +226,5 @@ public class SchrankUpdaterService extends Service {
 
     @Override
     public void onStart(Intent intent, int startid) {
-        Toast.makeText(this, R.string.ueberwachung_laeuft, Toast.LENGTH_LONG).show();
     }
 }

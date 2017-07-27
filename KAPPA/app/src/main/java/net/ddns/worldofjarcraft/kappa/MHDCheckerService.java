@@ -52,9 +52,10 @@ public class MHDCheckerService extends Service {
     }
     HashMap<Integer,String> schrankListe;
     HashMap<Integer,Pair<Integer,String>> fachListe;
-    ArrayList<String[]> ablaufend;
-
+    public static ArrayList<String[]> ablaufend;
+    public static ArrayList<String[] > alle_lebensmittel;
     public void init(){
+        Toast.makeText(MHDCheckerService.this, R.string.service_neu_gestartet, Toast.LENGTH_LONG).show();
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
@@ -158,8 +159,8 @@ public class MHDCheckerService extends Service {
                                             Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
                                             Bundle b = new Bundle();
                                             DataHelper helper = new DataHelper(ablaufend);
-                                            data.ablaufende = ablaufend;
                                             CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
+                                            //InhaltWidget.sendRefreshBroadcast(MHDCheckerService.this);
                                             b.putSerializable("lebensmittel", helper);
                                             intent.putExtras(b);
 // use System.currentTimeMillis() to have a unique ID for the pending intent

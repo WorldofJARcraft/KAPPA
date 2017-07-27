@@ -1,10 +1,13 @@
 package net.ddns.worldofjarcraft.kappa;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Pair;
 import android.widget.RemoteViews;
 
@@ -13,53 +16,68 @@ import android.widget.RemoteViews;
  * App Widget Configuration implemented in {@link InhaltWidgetConfigureActivity InhaltWidgetConfigureActivity}
  */
 public class InhaltWidget extends AppWidgetProvider {
-    public static final String KEY_SCHRANK="key_schrank";
-    public static final String KEY_FACH = "key_fach";
-    public static final String EXTRA_LABEL = "TASK_TEXT";
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
 
-        Pair<String,String> widgetText = InhaltWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.inhalt_widget);
-        views.setTextViewText(R.id.inhaltwidgetTitleLabel,context.getResources().getString(R.string.inhalte)+" "+widgetText.second+" "+context.getResources().getString(R.string.aus)+" "+widgetText.first);
-        // Instruct the widget manager to update the widget
-        Intent intent = new Intent(context,InhaltWidgetRemoteViewsService.class);
-        Bundle b = new Bundle(2);
-        b.putString(KEY_SCHRANK,widgetText.first);
-        b.putString(KEY_FACH,widgetText.second);
-        Intent serv = new Intent(context,SchrankUpdaterService.class);
-        serv.putExtras(b);
-        context.startService(serv);
-        intent.putExtras(b);
-        views.setRemoteAdapter(R.id.inhaltwidgetListView, intent);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
+    public static final String EXTRA_LABEL = "TASK_TEXT";
+    public static final String KEY_SCHRANK = "schrank";
+    public static final String KEY_FACH = "fach";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            RemoteViews views = new RemoteViews(
+
+                    context.getPackageName(),
+                    R.layout.inhalt_widget
+
+            );
+            if(!InhaltWidgetConfigureActivity.loadTitlePref(context,appWidgetId).first.isEmpty()&&!InhaltWidgetConfigureActivity.loadTitlePref(context,appWidgetId).second.isEmpty()){
+            // click event handler for the title, launches the app when the user clicks on title
+            Intent titleIntent = new Intent(context, LaunchActivity.class);
+            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
+            views.setOnClickPendingIntent(R.id.inhaltwidgetTitleLabel, titlePendingIntent);
+            Pair<String,String> pref = InhaltWidgetConfigureActivity.loadTitlePref(context,appWidgetId);
+                views.setTextViewText(R.id.inhaltwidgetTitleLabel,context.getResources().getString(R.string.inhalte)+" "+pref.second+" "+context.getResources().getString(R.string.aus)+" "+pref.first);
+            Bundle keys = new Bundle(2);
+            keys.putString(KEY_SCHRANK,pref.first);
+            keys.putString(KEY_FACH,pref.second);
+            Intent intent = new Intent(context, InhaltWidgetRemoteViewsService.class);
+            intent.putExtras(keys);
+            views.setRemoteAdapter(R.id.inhaltwidgetListView, intent);
+
+            // template to handle the click listener for each item
+            Intent clickIntentTemplate = new Intent(context, AblaufendActivity.class);
+            Bundle b = new Bundle(1);
+            DataHelper helper = new DataHelper(MHDCheckerService.alle_lebensmittel);
+            b.putSerializable("lebensmittel", helper);
+            clickIntentTemplate.putExtras(b);
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.inhaltwidgetListView, clickPendingIntentTemplate);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+
+            }
         }
     }
 
+
+    public static void sendRefreshBroadcast(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(context, InhaltWidget.class));
+        context.sendBroadcast(intent);
+    }
+
+
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        // When the user deletes the widget, delete the preference associated with it.
-        for (int appWidgetId : appWidgetIds) {
-            InhaltWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
+    public void onReceive(final Context context, Intent intent) {
+        final String action = intent.getAction();
+        if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            // refresh all your widgets
+            AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            ComponentName cn = new ComponentName(context, InhaltWidget.class);
+            mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.inhaltwidgetListView);
         }
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        super.onReceive(context, intent);
     }
 }
-

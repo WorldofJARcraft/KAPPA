@@ -47,6 +47,8 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        Intent serv = new Intent(this,SchrankUpdaterService.class);
+        this.startService(serv);
         mServiceIntent = new Intent(getApplicationContext(), MHDCheckerService.class);
         mServiceIntent.setData(Uri.EMPTY);
         SharedPreferences login = getSharedPreferences(login_name,MODE_PRIVATE);

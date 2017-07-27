@@ -63,6 +63,7 @@ public class HTTP_Connection extends AsyncTask<String, Void, String> {
         StringBuilder sb = new StringBuilder();
         //versuchen, Script zu starten und Daten davon auszulesen
         try {
+                url = url.replaceAll("ö","oe").replaceAll("ü","ue").replaceAll("ä","ae").replaceAll("Ö","Oe").replaceAll("Ü","Ue").replaceAll("Ä","Ae").replaceAll("ß","ssss");
                 System.out.println("Versuche, Anfrage an "+url+" zu senden!");
                 //String data = URLEncoder.encode("authkey", "UTF-8") + "=" + URLEncoder.encode(AUTHKEY, "UTF-8");
                 //übergebene Abrufadresse in eine URL umwandeln
@@ -144,6 +145,8 @@ public class HTTP_Connection extends AsyncTask<String, Void, String> {
             //Prozedur processFinish des Interface "AsyncResponse" aufrufen --> dieses ist abstrakt und muss von einer Klasse implementiert werden;
             //delegate muss zudem jene Klasse zugewiesen sein --> dann wird void in dieser Klasse ausgeführt, dem der Inhalt der Website übergeben wird,
             //und so ist der Inhalt der Website in dieser Klasse verfügbar
+            if(!result.equals("true"))
+            result = result.replaceAll("oe","ö").replaceAll("ue","ü").replaceAll("ae","ä").replaceAll("Oe","ö").replaceAll("Ue","Ü").replaceAll("Ae","Ä").replaceAll("ssss","ß");
             delegate.processFinish(result,url);
             System.out.println("Ergebnis:" + result);
         }
