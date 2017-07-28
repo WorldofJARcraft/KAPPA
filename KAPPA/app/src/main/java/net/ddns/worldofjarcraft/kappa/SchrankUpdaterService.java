@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import static android.R.attr.id;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;

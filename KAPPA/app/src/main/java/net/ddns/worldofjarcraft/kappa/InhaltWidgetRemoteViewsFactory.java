@@ -13,10 +13,20 @@ import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+
 
 /**
  * Created by Eric on 24.07.2017.
@@ -25,7 +35,7 @@ import java.util.logging.LogRecord;
 public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     public List<String[]> daten;
-    private String schrank=null, fach=null;
+    public String schrank=null, fach=null;
     public InhaltWidgetRemoteViewsFactory(Context context, Intent intent){
         mContext = context;
         Bundle extras = intent.getExtras();
@@ -33,9 +43,137 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
         fach=extras.getString(InhaltWidget.KEY_FACH);
         Log.e("Werte",schrank+","+fach);
     }
+    android.os.Handler handler2;
+    Runnable runnable2;
     @Override
     public void onCreate() {
+        handler2 = new android.os.Handler();
+        runnable2 = new Runnable() {
+            public void run() {
+                Log.e("SCHRANKSERVICE","LAUFE...");
+                HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+data.mail+"&pw="+data.pw);
+                conn.delegate = new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output, String url) {
+                        schrankListe = new HashMap<>();
+                        fachListe = new HashMap<>();
+                        if(!output.isEmpty()){
 
+                            final String[] schranenke = output.split("\\|");
+
+                            for(String schrank:schranenke){
+                                String[] attribute = schrank.split(";");
+                                Integer key = -1;
+                                try {
+                                    key = new Integer(attribute[0]);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                                if(key>=0){
+                                    schrankListe.put(key,attribute[1]);
+                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+attribute[1]);
+                                    conn.delegate = new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output, String url) {
+                                            if(!output.isEmpty()){
+                                                String[] faecher = output.split("\\|");
+                                                for(String fach:faecher){
+                                                    final String[] attribute = fach.split(";");
+                                                    Integer key = -1;
+                                                    Integer schrank = -1;
+                                                    try {
+                                                        key = new Integer(attribute[0]);
+                                                        schrank = Integer.valueOf(attribute[2]);
+                                                    }catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+                                                    if(key>=0&&schrank>=0){
+                                                        Pair<Integer,String> paar = new Pair<>(schrank,attribute[1]);
+                                                        fachListe.put(key,paar);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    };
+                                    conn.execute("");
+                                }
+                            }
+                            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/search.php?mail="+data.mail+"&pw="+data.pw);
+                            conn.delegate = new AsyncResponse() {
+                                @Override
+                                public void processFinish(String output, String url) {
+                                    boolean fehler = false;
+                                    if(!output.isEmpty()){
+                                        daten = new ArrayList<>();
+                                        String[] lebensmittel = output.split("\\|");
+                                        for(String lm:lebensmittel){
+                                            String[] werte = lm.split(";");
+                                            try {
+                                                Long mhd = new Long(werte[3]);
+                                                if(mhd>0){
+                                                    long rest = mhd - Calendar.getInstance().getTimeInMillis();
+                                                    if(rest>0){
+                                                        Calendar cal = Calendar.getInstance();
+                                                        cal.setTimeInMillis(rest);
+                                                        String text="";
+                                                        long year = cal.get(Calendar.YEAR), month = cal.get(Calendar.MONTH), day= Calendar.DAY_OF_MONTH;
+                                                        System.out.println(year+","+month+","+day);
+
+                                                        String[] angaben = new String[5];
+                                                        angaben[0] = werte[1];
+                                                        angaben[1] = werte[2];
+                                                        angaben[2] = cal.get(Calendar.DAY_OF_MONTH)+" " + mContext.getResources().getString(R.string.tage)+".";
+                                                        angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                        angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                        daten.add(angaben);
+                                                    }
+                                                    else{
+                                                        String[] angaben = new String[5];
+                                                        angaben[0] = werte[1];
+                                                        angaben[1] = werte[2];
+                                                        angaben[2] = mContext.getResources().getString(R.string.abgelaufen);
+                                                        angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                        angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                        daten.add(angaben);
+                                                    }
+
+                                                }
+                                                else {
+                                                    String[] angaben = new String[5];
+                                                    angaben[0] = werte[1];
+                                                    angaben[1] = werte[2];
+                                                    angaben[2] = mContext.getResources().getString(R.string.keine_Angabe);
+                                                    angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                    angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                    daten.add(angaben);
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                                fehler=true;
+                                            }
+                                        }
+                                        //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
+                                        // prepare intent which is triggered if the
+// notification is selected
+                                        if(!fehler) {
+                                            Log.e("RELOADING","Sending Broadcast");
+                                            for(String[] lm: daten)
+                                                System.out.println(lm[0]);
+                                            InhaltWidget.sendRefreshBroadcast(mContext);
+                                        }
+                                    }
+                                }
+                            };
+                            conn.execute("params");
+                        }
+                    }
+                };
+                conn.execute("params");
+                handler2.postDelayed(runnable2, 5000);
+            }
+        };
+
+        handler2.postDelayed(runnable2, 10);
 
         if(daten==null) {
             daten = new ArrayList<>();
@@ -43,15 +181,16 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
         }
         daten = getWerte();
     }
+
+    HashMap<Integer,String> schrankListe;
+    HashMap<Integer,Pair<Integer,String>> fachListe;
     private ArrayList<String[]> getWerte(){
         ArrayList<String[]> werte = new ArrayList();
-        if(SchrankUpdaterService.alle_lebensmittel!=null){
-        for(String[] attr: SchrankUpdaterService.alle_lebensmittel){
+        for(String[] attr: daten){
             if(attr.length>4){
                 if(attr[4].equals(schrank)&&attr[3].equals(fach))
                     werte.add(attr);
             }
-        }
         }
         return werte;
     }
@@ -79,16 +218,16 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
         if(i<0||i>=daten.size())
             return null;
         else {
-            if(daten!=null){
+            if(daten!=null || daten.size()==1){
+                daten = getWerte();
                 System.out.println("Alle lm-onCreate");
-                System.out.println("ISt null: "+MHDCheckerService.alle_lebensmittel==null);
                 /*for (String[] data:MHDCheckerService.alle_lebensmittel){
                     System.out.println(data);
                 }*/
                 RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
                 rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
                 Intent fillInIntent = new Intent();
-                fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
+                fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+ daten.get(i)[2]+")");
                 rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
                 return rv;}
             else {

@@ -21,6 +21,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.text.Format;
@@ -54,6 +55,8 @@ public class MHDCheckerService extends Service {
     HashMap<Integer,Pair<Integer,String>> fachListe;
     public static ArrayList<String[]> ablaufend;
     public static ArrayList<String[] > alle_lebensmittel;
+    public Handler handler2=null;
+    public Runnable runnable2=null;
     public void init(){
         Toast.makeText(MHDCheckerService.this, R.string.service_neu_gestartet, Toast.LENGTH_LONG).show();
         handler = new Handler();
@@ -214,6 +217,135 @@ public class MHDCheckerService extends Service {
         };
 
         handler.postDelayed(runnable, 5000);
+
+        handler2 = new Handler();
+        runnable2 = new Runnable() {
+            public void run() {
+                Log.e("SCHRANKSERVICE","LAUFE...");
+                HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+data.mail+"&pw="+data.pw);
+                conn.delegate = new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output, String url) {
+                        schrankListe = new HashMap<>();
+                        fachListe = new HashMap<>();
+                        if(!output.isEmpty()){
+
+                            final String[] schranenke = output.split("\\|");
+
+                            for(String schrank:schranenke){
+                                String[] attribute = schrank.split(";");
+                                Integer key = -1;
+                                try {
+                                    key = new Integer(attribute[0]);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                                if(key>=0){
+                                    schrankListe.put(key,attribute[1]);
+                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+attribute[1]);
+                                    conn.delegate = new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output, String url) {
+                                            if(!output.isEmpty()){
+                                                String[] faecher = output.split("\\|");
+                                                for(String fach:faecher){
+                                                    final String[] attribute = fach.split(";");
+                                                    Integer key = -1;
+                                                    Integer schrank = -1;
+                                                    try {
+                                                        key = new Integer(attribute[0]);
+                                                        schrank = Integer.valueOf(attribute[2]);
+                                                    }catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+                                                    if(key>=0&&schrank>=0){
+                                                        Pair<Integer,String> paar = new Pair<>(schrank,attribute[1]);
+                                                        fachListe.put(key,paar);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    };
+                                    conn.execute("");
+                                }
+                            }
+                            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/search.php?mail="+data.mail+"&pw="+data.pw);
+                            conn.delegate = new AsyncResponse() {
+                                @Override
+                                public void processFinish(String output, String url) {
+                                    boolean fehler = false;
+                                    if(!output.isEmpty()){
+                                        alle_lebensmittel = new ArrayList<>();
+                                        String[] lebensmittel = output.split("\\|");
+                                        for(String lm:lebensmittel){
+                                            String[] werte = lm.split(";");
+                                            try {
+                                                Long mhd = new Long(werte[3]);
+                                                if(mhd>0){
+                                                    long rest = mhd - Calendar.getInstance().getTimeInMillis();
+                                                    if(rest>0){
+                                                        Calendar cal = Calendar.getInstance();
+                                                        cal.setTimeInMillis(rest);
+                                                        String text="";
+                                                        long year = cal.get(Calendar.YEAR), month = cal.get(Calendar.MONTH), day= Calendar.DAY_OF_MONTH;
+                                                        System.out.println(year+","+month+","+day);
+
+                                                        String[] angaben = new String[5];
+                                                        angaben[0] = werte[1];
+                                                        angaben[1] = werte[2];
+                                                        angaben[2] = cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
+                                                        angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                        angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                        alle_lebensmittel.add(angaben);
+                                                    }
+                                                    else{
+                                                        String[] angaben = new String[5];
+                                                        angaben[0] = werte[1];
+                                                        angaben[1] = werte[2];
+                                                        angaben[2] = getResources().getString(R.string.abgelaufen);
+                                                        angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                        angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                        alle_lebensmittel.add(angaben);
+                                                    }
+
+                                                }
+                                                else {
+                                                    String[] angaben = new String[5];
+                                                    angaben[0] = werte[1];
+                                                    angaben[1] = werte[2];
+                                                    angaben[2] = getResources().getString(R.string.keine_Angabe);
+                                                    angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
+                                                    angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
+                                                    alle_lebensmittel.add(angaben);
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                                fehler=true;
+                                            }
+                                        }
+                                        //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
+                                        // prepare intent which is triggered if the
+// notification is selected
+                                        if(!fehler) {
+                                            Log.e("RELOADING","Sending Broadcast");
+                                            MHDCheckerService.alle_lebensmittel = alle_lebensmittel;
+                                            for(String[] lm: alle_lebensmittel)
+                                                System.out.println(lm[0]);
+                                            InhaltWidget.sendRefreshBroadcast(context);
+                                        }
+                                    }
+                                }
+                            };
+                            conn.execute("params");
+                        }
+                    }
+                };
+                conn.execute("params");
+                handler2.postDelayed(runnable2, repeatMillis);
+            }
+        };
+
+        handler2.postDelayed(runnable2, 5000);
     }
     @Override
     public void onCreate() {

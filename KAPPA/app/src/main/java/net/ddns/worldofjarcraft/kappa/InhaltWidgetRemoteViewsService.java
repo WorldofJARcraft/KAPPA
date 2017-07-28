@@ -1,6 +1,7 @@
 package net.ddns.worldofjarcraft.kappa;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViewsService;
 
 /**
@@ -10,6 +11,7 @@ import android.widget.RemoteViewsService;
 public class InhaltWidgetRemoteViewsService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Log.e("Übergeben",intent.getStringExtra(InhaltWidget.KEY_SCHRANK)+";"+intent.getStringExtra(InhaltWidget.KEY_FACH));
         return new InhaltWidgetRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }
