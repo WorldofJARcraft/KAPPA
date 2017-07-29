@@ -26,10 +26,15 @@ import android.widget.RemoteViews;
 import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
 
 /**
  * The configuration screen for the {@link InhaltWidget InhaltWidget} AppWidget.
@@ -100,6 +105,7 @@ public class InhaltWidgetConfigureActivity extends Activity {
     }
     List<String> liste;
     List<String> faecher;
+    String mail,pw;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -124,7 +130,28 @@ public class InhaltWidgetConfigureActivity extends Activity {
             finish();
             return;
         }
-        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+data.mail+"&pw="+data.pw,2);
+        SharedPreferences login = getSharedPreferences(login_name, MODE_PRIVATE);
+        if ((login.contains(user_preference) && login.contains(user_password))) {
+            System.out.println("Melde mich mit gespeiucherten Daten an!");
+            mail = login.getString(user_preference, null);
+            pw = login.getString(user_password, null);
+            //prüfen, ob Daten gültig sind
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail=" + mail + "&pw=" + pw);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    if (output.equals("true")) {
+                        System.out.println("Daten korrekt!");
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.kann_nicht_aktualisieren, Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+            conn.execute("params");
+        }
+        else
+            mail=pw=null;
+        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+mail+"&pw="+pw,2);
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
@@ -133,7 +160,11 @@ public class InhaltWidgetConfigureActivity extends Activity {
                     String[] boxen = output.split("\\|");
                     for(String box:boxen){
                         String[] attribute = box.split(";");
+                        if(attribute.length>1)
                         liste.add(attribute[1]);
+                        else {
+                            Toast.makeText(getApplicationContext(),R.string.network_error,Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             Spinner schrank = findViewById(R.id.schrankSpinner);
@@ -143,7 +174,7 @@ public class InhaltWidgetConfigureActivity extends Activity {
                 schrank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        String url = "https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+liste.get(adapterView.getSelectedItemPosition());
+                        String url = "https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+mail+"&pw="+pw+"&schrank="+liste.get(adapterView.getSelectedItemPosition());
                         HTTP_Connection conn = new HTTP_Connection(url,1);
                         conn.delegate = new AsyncResponse() {
                             @Override
@@ -154,6 +185,9 @@ public class InhaltWidgetConfigureActivity extends Activity {
                                     String[] werte = fach.split(";");
                                     if(werte.length>=2){
                                         faecher.add(werte[1]);
+                                    }
+                                    else {
+                                        Toast.makeText(getApplicationContext(),R.string.network_error,Toast.LENGTH_LONG).show();
                                     }
                                 }
                             Spinner fachSpinner = findViewById(R.id.FachSpinner);

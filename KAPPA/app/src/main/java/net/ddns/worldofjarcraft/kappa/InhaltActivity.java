@@ -226,7 +226,7 @@ public class InhaltActivity extends Activity{
                                     Calendar cal = Calendar.getInstance();
                                     cal.set(i, i1, i2);
                                     long time = cal.getTimeInMillis();
-                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=" + time);
+                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=" + time+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
                                     conn.delegate = new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output, String url) {
@@ -242,7 +242,7 @@ public class InhaltActivity extends Activity{
                         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         dialog.show();
                     } else {
-                        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=0");
+                        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=0"+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
                         conn.delegate = new AsyncResponse() {
                             @Override
                             public void processFinish(String output, String url) {
@@ -401,22 +401,30 @@ MenuItem aktFach;
                 v3.setText(R.string.haltbar);
                 v3.setTextSize(24);
                 v3.setTypeface(v3.getTypeface(), Typeface.BOLD);
+                TextView v4= new TextView(InhaltActivity.this);
+                v4.setText(R.string.eingelagert_am);
+                v4.setTextSize(24);
+                v4.setTypeface(v4.getTypeface(), Typeface.BOLD);
                 Space space = new Space(InhaltActivity.this);
                 space.setMinimumWidth(30);
                 Space space2 = new Space(InhaltActivity.this);
                 space2.setMinimumWidth(30);
                 Space space3 = new Space(InhaltActivity.this);
                 space3.setMinimumWidth(30);
+                Space space4 = new Space(InhaltActivity.this);
+                space4.setMinimumWidth(30);
                 kopfzeile.addView(v1);
                 kopfzeile.addView(space);
                 kopfzeile.addView(v2);
                 kopfzeile.addView(space2);
                 kopfzeile.addView(v3);
                 kopfzeile.addView(space3);
+                kopfzeile.addView(v4);
+                kopfzeile.addView(space4);
                 tabelle.addView(kopfzeile);
                 for(String lebensmittel:lm){
                     String[] attribute = lebensmittel.split(";");
-                    if(attribute.length>3){
+                    if(attribute.length>4){
                         try {
 
                     ids.add(new Integer(attribute[0]));
@@ -436,6 +444,10 @@ MenuItem aktFach;
                     i3.setText(R.string.keine_Angabe);
                         i3.setTextSize(24);
                         i3.setBackgroundResource(R.drawable.textviewstyle);
+                        TextView i4= new TextView(InhaltActivity.this);
+                        i4.setText(R.string.keine_Angabe);
+                        i4.setTextSize(24);
+                        i4.setBackgroundResource(R.drawable.textviewstyle);
                     try {
                         Long mhd = new Long(attribute[3]);
                         if(mhd>0){
@@ -469,12 +481,30 @@ MenuItem aktFach;
                     }catch (Exception e){
                         e.printStackTrace();
                     }
+                        try {
+                            Long eingel = Long.valueOf(attribute[4]);
+                            if(eingel>0){
+                                                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTimeInMillis(eingel);
+                                    long year = cal.get(Calendar.YEAR), month = cal.get(Calendar.MONTH), day= Calendar.DAY_OF_MONTH;
+                                    System.out.println(year+","+month+","+day);
+                                java.text.DateFormat formatter = java.text.DateFormat.getDateInstance(
+                                        java.text.DateFormat.LONG); // one of SHORT, MEDIUM, LONG, FULL, or DEFAULT
+                                formatter.setTimeZone(cal.getTimeZone());
+                                String formatted = formatter.format(cal.getTime());
+                                    i4.setText(formatted);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                          space = new Space(InhaltActivity.this);
                         space.setMinimumWidth(30);
                          space2 = new Space(InhaltActivity.this);
                         space2.setMinimumWidth(30);
                          space3 = new Space(InhaltActivity.this);
                         space3.setMinimumWidth(30);
+                        space4 = new Space(InhaltActivity.this);
+                        space4.setMinimumWidth(30);
                     zeile.addView(i1);
                     zeile.addView(space);
                     zeile.addView(i2);
@@ -483,6 +513,8 @@ MenuItem aktFach;
                     zeile.addView(i3);
 
                         zeile.addView(space3);
+                        zeile.addView(i4);
+                        zeile.addView(space4);
                         zeile.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View view) {

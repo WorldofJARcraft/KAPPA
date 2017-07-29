@@ -177,7 +177,7 @@
     <string name="essen_loeschen">Möchten Sie dieses Lebensmittel wirklich löschen?</string>
     <string name="fach_loeschen">Fach löschen</string>
     <string name="fach_loeschen_info">Möchten Sie dieses Fach wirklich löschen? Alle gespeicherten Lebensmittel gehen verloren.</string>
-    <string name="suche_LM">Lebensmittel suchen</string>
+    <string name="suche_LM">suche Lebensmittel</string>
     <string name="title_activity_suche">SucheActivity</string>
     <string name="suche_name">KAPPA - Suche</string>
     <string name="suchen">Lebensmittel suchen</string>
@@ -285,4 +285,7 @@
     <string name="service_aus">Für die Verwendung dieses Widgets ist die KAPPA Haltbarkeitsüberwachung nötig. Bitte starten Sie diese im Hauptmenü!</string>
     <string name="widget_inhalt">KAPPA - Lebensmittel im gewählten Fach</string>
     <string name="service_neu_gestartet">Die Haltbarkeitsüberwachung wurde gestartet und informiert Sie über ablaufende Lebensmittel.</string>
+    <string name="kann_nicht_aktualisieren">Das Widget kann nicht aktualisiert werden, da Ihr Benutzername und/oder Ihr Passwort nicht gültig ist. Bitte öffnen Sie die App KAPPA und melden sich erneut an.</string>
+    <string name="eingelagert_am">eingelagert am:</string>
+    <string name="keine_lm">Es wurden keine ablaufenden Lebensmittel gefunden. Dabei kann es sich allerdings auch um einen Fehler handeln.</string>
 </resources>

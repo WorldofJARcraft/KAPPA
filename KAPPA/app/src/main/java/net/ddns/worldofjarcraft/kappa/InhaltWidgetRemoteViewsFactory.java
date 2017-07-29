@@ -1,17 +1,22 @@
 package net.ddns.worldofjarcraft.kappa;
 
 import android.app.ActivityManager;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +32,11 @@ import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+import static android.content.Context.MODE_PRIVATE;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
+import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
+
 
 /**
  * Created by Eric on 24.07.2017.
@@ -36,12 +46,34 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
     private Context mContext;
     public List<String[]> daten;
     public String schrank=null, fach=null;
-    public InhaltWidgetRemoteViewsFactory(Context context, Intent intent){
+    private String mail,pw;
+    public InhaltWidgetRemoteViewsFactory(final Context context, Intent intent) {
         mContext = context;
         Bundle extras = intent.getExtras();
         schrank = extras.getString(InhaltWidget.KEY_SCHRANK);
-        fach=extras.getString(InhaltWidget.KEY_FACH);
-        Log.e("Werte",schrank+","+fach);
+        fach = extras.getString(InhaltWidget.KEY_FACH);
+        Log.e("Werte", schrank + "," + fach);
+        SharedPreferences login = context.getSharedPreferences(login_name, MODE_PRIVATE);
+        if ((login.contains(user_preference) && login.contains(user_password)) || (data.mail != null && data.pw != null)) {
+            System.out.println("Melde mich mit gespeiucherten Daten an!");
+            mail = login.getString(user_preference, null);
+            pw = login.getString(user_password, null);
+            //prüfen, ob Daten gültig sind
+            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail=" + mail + "&pw=" + pw);
+            conn.delegate = new AsyncResponse() {
+                @Override
+                public void processFinish(String output, String url) {
+                    if (output.equals("true")) {
+                        System.out.println("Daten korrekt!");
+                    } else {
+                        Toast.makeText(context, R.string.kann_nicht_aktualisieren, Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+            conn.execute("params");
+        }
+        else
+        mail=pw=null;
     }
     android.os.Handler handler2;
     Runnable runnable2;
@@ -82,8 +114,10 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
                                                     Integer key = -1;
                                                     Integer schrank = -1;
                                                     try {
+                                                        if(attribute.length>2){
                                                         key = new Integer(attribute[0]);
                                                         schrank = Integer.valueOf(attribute[2]);
+                                                        }
                                                     }catch (Exception e){
                                                         e.printStackTrace();
                                                     }
@@ -108,6 +142,7 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
                                         String[] lebensmittel = output.split("\\|");
                                         for(String lm:lebensmittel){
                                             String[] werte = lm.split(";");
+                                            if(werte.length>4){
                                             try {
                                                 Long mhd = new Long(werte[3]);
                                                 if(mhd>0){
@@ -122,7 +157,7 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
                                                         String[] angaben = new String[5];
                                                         angaben[0] = werte[1];
                                                         angaben[1] = werte[2];
-                                                        angaben[2] = cal.get(Calendar.DAY_OF_MONTH)+" " + mContext.getResources().getString(R.string.tage)+".";
+                                                        angaben[2] = cal.get(Calendar.YEAR)-1970+" "+mContext.getString(R.string.jahre)+", "+cal.get(Calendar.MONTH)+" "+mContext.getString(R.string.monate)+", "+cal.get(Calendar.DAY_OF_MONTH)+" " + mContext.getResources().getString(R.string.tage)+".";
                                                         angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
                                                         angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
                                                         daten.add(angaben);
@@ -152,6 +187,8 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
                                                 fehler=true;
                                             }
                                         }
+                                        else fehler=true;
+                                        }
                                         //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
                                         // prepare intent which is triggered if the
 // notification is selected
@@ -169,11 +206,11 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
                     }
                 };
                 conn.execute("params");
-                handler2.postDelayed(runnable2, 5000);
+                handler2.postDelayed(runnable2, 30000);
             }
         };
 
-        handler2.postDelayed(runnable2, 10);
+        handler2.postDelayed(runnable2, 1000);
 
         if(daten==null) {
             daten = new ArrayList<>();
@@ -215,17 +252,17 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
 
     @Override
     public RemoteViews getViewAt(int i) {
-        if(i<0||i>=daten.size())
+        if(i<0||daten==null||i>=daten.size())
             return null;
         else {
-            if(daten!=null || daten.size()==1){
+            if(daten!=null ){
                 daten = getWerte();
                 System.out.println("Alle lm-onCreate");
                 /*for (String[] data:MHDCheckerService.alle_lebensmittel){
                     System.out.println(data);
                 }*/
                 RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
-                rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
+                rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel,daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
                 Intent fillInIntent = new Intent();
                 fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+ daten.get(i)[2]+")");
                 rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);

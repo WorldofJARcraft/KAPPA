@@ -108,6 +108,7 @@ public class SucheActivity extends Activity {
                         w2.setTextSize(24);
                         TextView i3 = new TextView(SucheActivity.this);
                         i3.setTextSize(24);
+                        i3.setText(R.string.keine_Angabe);
                         try {
                             Long mhd = new Long(werte[3]);
                             if(mhd>0){

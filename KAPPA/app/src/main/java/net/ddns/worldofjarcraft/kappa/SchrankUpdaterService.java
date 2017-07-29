@@ -212,7 +212,7 @@ public class SchrankUpdaterService extends Service {
 
         else{
             System.out.println("Frage Nutzerdaten an!");
-            context.startActivity(new Intent(context,LoginActivity.class));
+            //context.startActivity(new Intent(context,LoginActivity.class));
         }
 
 

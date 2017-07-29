@@ -19,6 +19,14 @@
     android:layout_height="match_parent"
     tools:context="net.ddns.worldofjarcraft.kappa.EinkaufActivity">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30sp"
+        android:layout_below="@+id/neuerEinkauf"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space3" />
+
     <ProgressBar
         android:id="@+id/fortschritt"
         style="@style/Widget.AppCompat.ProgressBar"
@@ -74,8 +82,8 @@
         android:layout_toStartOf="@+id/neuerEinkauf"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/reloadButton"
-        android:layout_toLeftOf="@+id/neuerEinkauf">
+        android:layout_toLeftOf="@+id/neuerEinkauf"
+        android:layout_below="@+id/space3">
 
         <LinearLayout
             android:id="@+id/einkaufsliste"

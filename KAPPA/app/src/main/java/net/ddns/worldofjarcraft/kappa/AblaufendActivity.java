@@ -26,6 +26,7 @@ public class AblaufendActivity extends Activity {
         if(helper!=null){
             lebensmittel = helper.getList();
         }
+        else lebensmittel=MHDCheckerService.ablaufend;
         showLebensmittel(lebensmittel);
     }
 
@@ -74,6 +75,7 @@ public class AblaufendActivity extends Activity {
         kopfzeile.addView(v5);
         kopfzeile.addView(space5);
         tabelle.addView(kopfzeile);
+        if(lebensmittel!=null){
         for (String[] attribute : lebensmittel) {
             if (attribute.length > 4) {
 
@@ -128,6 +130,13 @@ public class AblaufendActivity extends Activity {
                 zeile.addView(space5);
                 tabelle.addView(zeile);
             }
+        }}
+        else{
+            TextView view = new TextView(this);
+            view.setText(R.string.keine_lm);
+            TableRow zeile = new TableRow(this);
+            zeile.addView(view);
+            tabelle.addView(zeile);
         }
 
     }
