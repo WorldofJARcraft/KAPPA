@@ -50,7 +50,7 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
-	$sqlStmt = "SELECT laufNummer FROM `Kuehlschrank` WHERE Name='".$_GET["schrank"]."';";
+	$sqlStmt = "SELECT laufNummer FROM `Kuehlschrank` WHERE Name='".$_GET["schrank"]."' AND Besitzer='".$_GET["mail"]."'";
   //Abfrage vorbereiten
   $result =  mysqli_query($connection,$sqlStmt);
   //wenn Ergebnisse...

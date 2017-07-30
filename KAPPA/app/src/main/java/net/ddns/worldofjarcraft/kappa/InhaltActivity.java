@@ -226,7 +226,7 @@ public class InhaltActivity extends Activity{
                                     Calendar cal = Calendar.getInstance();
                                     cal.set(i, i1, i2);
                                     long time = cal.getTimeInMillis();
-                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=" + time+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
+                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString().replaceAll(" ", "%20") + "&mhd=" + time+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
                                     conn.delegate = new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output, String url) {
@@ -242,7 +242,7 @@ public class InhaltActivity extends Activity{
                         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         dialog.show();
                     } else {
-                        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString() + "&mhd=0"+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
+                        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neues_Lebensmittel.php?mail=" + data.mail + "&pw=" + data.pw + "&schrank=" + name + "&fach=" + werte.second.replaceAll(" ", "%20") + "&name=" + name_lm.getText().toString().replaceAll(" ", "%20") + "&zahl=" + zahl_lm.getText().toString().replaceAll(" ", "%20") + "&mhd=0"+"&eingelagert="+Calendar.getInstance().getTimeInMillis());
                         conn.delegate = new AsyncResponse() {
                             @Override
                             public void processFinish(String output, String url) {

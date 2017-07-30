@@ -128,7 +128,7 @@ public class SucheActivity extends Activity {
                                     text+=cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
                                     i3.setText(text);
                                     if(cal.get(Calendar.YEAR)-1970==0&&!text.contains(getResources().getString(R.string.monate))&&cal.get(Calendar.DAY_OF_MONTH)<8){
-                                        i3.setTextColor(Color.YELLOW);
+                                        i3.setTextColor(getResources().getColor(R.color.ORANGE));
                                     }
                                     else
                                         i3.setTextColor(Color.GREEN);

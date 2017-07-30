@@ -21,9 +21,6 @@ public class BootCompleted extends BroadcastReceiver{
         //we double check here for only boot complete event
         if(intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED))
         {
-            Intent serv = new Intent(context,SchrankUpdaterService.class);
-            Log.e("START","Kühlschrankservice gestartet!");
-            context.startService(serv);
             /*context.setTheme(R.style.AppTheme);
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.ueberwachung_gestartet);

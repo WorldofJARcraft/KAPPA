@@ -66,7 +66,7 @@ function neuerUser ($connection) {
   $result =  mysqli_query($connection,$sqlStmt);
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)
-      echo $zeile["lNummer"].";".$zeile["Name"]."|"; 
+      echo $zeile["lNummer"].";".$zeile["Name"].";".$zeile["Kuehlschrank"]."|"; 
   }    
   // Das Objekt wieder freigeben.
    //Ergebnisse leeren

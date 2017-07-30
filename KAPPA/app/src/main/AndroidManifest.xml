@@ -81,7 +81,6 @@
         <service
             android:name=".InhaltWidgetRemoteViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <service android:name=".SchrankUpdaterService" />
 
         <receiver android:name=".InhaltWidget"
             android:label="@string/widget_inhalt">

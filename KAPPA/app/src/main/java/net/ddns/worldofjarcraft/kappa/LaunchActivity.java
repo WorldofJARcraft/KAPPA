@@ -47,8 +47,6 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        Intent serv = new Intent(this,SchrankUpdaterService.class);
-        this.startService(serv);
         mServiceIntent = new Intent(getApplicationContext(), MHDCheckerService.class);
         mServiceIntent.setData(Uri.EMPTY);
         SharedPreferences login = getSharedPreferences(login_name,MODE_PRIVATE);
@@ -253,7 +251,19 @@ public class LaunchActivity extends AppCompatActivity {
     public void schraenke(){startActivity(new Intent(this, SchrankActivity.class));}
 
     public void back(View view){
-        this.finish();
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+
+    }
+    @Override
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+
     }
     public final static String autostart_name = "autostart";
     public void autostart_service(View view){
