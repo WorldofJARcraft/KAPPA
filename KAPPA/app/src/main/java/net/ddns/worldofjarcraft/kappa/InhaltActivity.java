@@ -79,7 +79,6 @@ public class InhaltActivity extends Activity{
         };
 
         ColorStateList csl = new ColorStateList(state, color);
-
         int[][] state2 = new int[][] {
                 new int[] {android.R.attr.state_checked}, // checked
                 new int[] {-android.R.attr.state_checked}
@@ -94,6 +93,13 @@ public class InhaltActivity extends Activity{
         ProgressBar bar = findViewById(R.id.progressBarInhalt);
         bar.bringToFront();
         bar.setVisibility(View.VISIBLE);
+        ImageButton imageButton = findViewById(R.id.back_Inhalt);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(view);
+            }
+        });
         Bundle b = getIntent().getExtras();
         if(b!=null){
             nr=b.getInt("schrank");

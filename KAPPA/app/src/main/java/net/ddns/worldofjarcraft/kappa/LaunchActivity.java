@@ -21,10 +21,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.logging.Logger;
+
+import static net.ddns.worldofjarcraft.kappa.R.drawable.back;
 
 public class LaunchActivity extends AppCompatActivity {
     /**
@@ -148,6 +151,13 @@ public class LaunchActivity extends AppCompatActivity {
         });
         final FloatingActionButton button = (FloatingActionButton) findViewById(R.id.schraenkeButton);
         FloatingActionButton butt = (FloatingActionButton) findViewById(R.id.startDaemon);
+        ImageButton b = (ImageButton) findViewById(R.id.back_Launch);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(view);
+            }
+        });
         butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

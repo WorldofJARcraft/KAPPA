@@ -8,6 +8,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.TableLayout;
@@ -35,6 +36,13 @@ public class SucheActivity extends Activity {
             }
         });
         bar.setVisibility(View.GONE);
+        ImageButton butt = findViewById(R.id.back_Suche);
+        butt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(view);
+            }
+        });
     }
     HashMap<Integer,String> faecher;
     void search(){

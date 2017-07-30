@@ -11,6 +11,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
@@ -38,6 +39,13 @@ public class SchrankActivity extends Activity {
             @Override
             public void onClick(View view) {
                 aktualisieren();
+            }
+        });
+        ImageButton b = findViewById(R.id.back_Schrank);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(view);
             }
         });
         aktualisieren();

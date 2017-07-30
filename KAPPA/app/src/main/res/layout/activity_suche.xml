@@ -55,20 +55,20 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_toRightOf="@+id/progressBarSuche"
+        android:layout_toEndOf="@+id/progressBarSuche">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="26dp"
-            android:background="@android:color/transparent"
-            android:onClick="back"
-            android:src="@drawable/back" />
+            <ImageButton
+                android:id="@+id/back_Suche"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:background="@android:color/transparent"
+                android:onClick="back"
+                android:src="@drawable/back" />
 
         <CheckedTextView
             android:id="@+id/checkedTextView"

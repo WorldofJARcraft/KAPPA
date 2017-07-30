@@ -54,7 +54,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/back_Einkauf"
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
                 android:background="@android:color/transparent"

@@ -16,6 +16,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.os.Build.VERSION_CODES.M;
+import static net.ddns.worldofjarcraft.kappa.R.id.reloadButton;
 
 public class EinkaufActivity extends Activity {
 
@@ -34,14 +36,21 @@ public class EinkaufActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_einkauf);
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.neuerEinkauf);
+       FloatingActionButton fab = findViewById(R.id.neuerEinkauf);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 neuerEinkauf();
             }
         });
-        FloatingActionButton reloadButton = (FloatingActionButton) findViewById(R.id.reloadButton);
+        ImageButton butt = findViewById(R.id.back_Einkauf);
+        butt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(view);
+            }
+        });
+        FloatingActionButton reloadButton = findViewById(R.id.reloadButton);
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
