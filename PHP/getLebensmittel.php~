@@ -50,7 +50,7 @@ function neuerUser ($connection) {
 	//Abfrage formulieren...
 	//genaue Tabelle und einzutragende Startnummer werden per GET in der Adresse übergeben und hier eingesetzt
 	//auslesen, ob für Startnummer schon Zeit eingetragen ist
-	$sqlStmt = "SELECT laufNummer FROM `Kuehlschrank` WHERE Name='".$_GET["schrank"]."';";
+	$sqlStmt = "SELECT laufNummer FROM `Kuehlschrank` WHERE Name='".$_GET["schrank"]."' AND Besitzer='".$_GET["mail"]."'";
   //Abfrage vorbereiten
   $result =  mysqli_query($connection,$sqlStmt);
   //wenn Ergebnisse...
@@ -77,7 +77,7 @@ function neuerUser ($connection) {
    //Ergebnisse leeren
 	$result->free();
 	if(!empty($nummer)){
-	$sqlStmt = "SELECT * FROM `Lebensmittel` WHERE Fach='".$fach."' AND Besitzer='".$_GET["mail"]."'";
+	$sqlStmt = "SELECT * FROM `Lebensmittel` WHERE Fach='".$fach."' AND Besitzer='".$_GET["mail"]."' ORDER BY 'Name' ASC";
 	$result =  mysqli_query($connection,$sqlStmt);
 	while ($zeile = mysqli_fetch_array( $result, MYSQL_ASSOC)){
   		//... dann die Zahl dr Messstationen ausgeben (Zahl in Spalte "Wert" der ersten und einzigen gefundenen Zeile)

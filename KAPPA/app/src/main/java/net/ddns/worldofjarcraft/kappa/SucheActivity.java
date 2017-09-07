@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.app.Activity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.TextKeyListener;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -27,12 +30,13 @@ public class SucheActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suche);
          bar = findViewById(R.id.progressBarSuche);
-        Button search = findViewById(R.id.search);
+        final Button search = findViewById(R.id.search);
         schrank = getIntent().getExtras().getString("name");
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search();
+                final EditText text = findViewById(R.id.sterm);
+                search(text.getText().toString());
             }
         });
         bar.setVisibility(View.GONE);
@@ -43,11 +47,29 @@ public class SucheActivity extends Activity {
                 back(view);
             }
         });
+        final EditText text = findViewById(R.id.sterm);
+        text.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                search(s.toString());
+            }
+        });
+
     }
     HashMap<Integer,String> faecher;
-    void search(){
+    void search(final String sterm){
         bar.setVisibility(View.VISIBLE);
-        final EditText text = findViewById(R.id.sterm);
+
         HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+data.mail+"&pw="+data.pw+"&schrank="+schrank);
         AsyncResponse response = new AsyncResponse() {
             @Override
@@ -63,7 +85,7 @@ public class SucheActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
-        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/search.php?mail="+data.mail+"&pw="+data.pw+"&sterm="+text.getText().toString().replaceAll(" ","%20"));
+        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/search.php?mail="+data.mail+"&pw="+data.pw+"&sterm="+sterm.replaceAll(" ","%20"));
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {

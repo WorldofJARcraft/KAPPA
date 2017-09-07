@@ -252,31 +252,25 @@ public class InhaltWidgetRemoteViewsFactory implements RemoteViewsService.Remote
 
     @Override
     public RemoteViews getViewAt(int i) {
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
         if(i<0||daten==null||i>=daten.size())
-            return null;
+            return rv;
         else {
             if(daten!=null ){
-                daten = getWerte();
-                System.out.println("Alle lm-onCreate");
+                if(daten.size()>i) {
+                    daten = getWerte();
+                    System.out.println("Alle lm-onCreate");
                 /*for (String[] data:MHDCheckerService.alle_lebensmittel){
                     System.out.println(data);
                 }*/
-                RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
-                rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel,daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
-                Intent fillInIntent = new Intent();
-                fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+ daten.get(i)[2]+")");
-                rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
-                return rv;}
-            else {
-                Log.e("NICHTS DA","ALLES LEER");
-                RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
-                rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel, mContext.getResources().getString(R.string.service_aus));
-                Intent fillInIntent = new Intent();
-                fillInIntent.putExtra(InhaltWidget.EXTRA_LABEL, "");
-                rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
-                return rv;
+                    rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel, daten.get(i)[0] + " (" + mContext.getResources().getString(R.string.haltbarkeit) + ": " + daten.get(i)[2] + ")");
+                    Intent fillInIntent = new Intent();
+                    fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0] + " (" + mContext.getResources().getString(R.string.haltbarkeit) + ": " + daten.get(i)[2] + ")");
+                    rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
+                }
             }
         }
+        return rv;
     }
 
     @Override

@@ -7,8 +7,8 @@ android {
         applicationId "net.ddns.worldofjarcraft.kappa"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 05
-        versionName "0.5 BETA"
+        versionCode 06
+        versionName "0.6 BETA"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

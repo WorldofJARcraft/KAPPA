@@ -62,46 +62,49 @@ public class SchrankActivity extends Activity {
                 if(!output.isEmpty()){
                 String[] boxen = output.split("\\|");
                 for(String box:boxen){
-                    String[] attribute = box.split(";");
-                    liste.add(new Pair<Integer, String>(new Integer(attribute[0]), attribute[1]));
-                    TextView v = new TextView(SchrankActivity.this);
-                    v.setText(attribute[1]);
-                    v.setTextSize(24);
-                    v.setTextColor(getResources().getColor(R.color.black));
-                    v.setBackgroundResource(R.drawable.textviewstyle);
-                    v.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            final View v = view;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SchrankActivity.this);
-                            builder.setTitle(R.string.schrank_loeschen_titel);
-                            builder.setMessage(R.string.schrank_loeschen);
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    delete(v);
-                                }
-                            });
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                            builder.show();
-                            return false;
-                        }
-                    });
-                    v.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            open(view);
-                        }
-                    });
-                    Space s = new Space(SchrankActivity.this);
-                    s.setMinimumHeight(30);
-                    schraenke.addView(v);
-                    schraenke.addView(s);
+                    try {
+                        String[] attribute = box.split(";");
+                        liste.add(new Pair<Integer, String>(new Integer(attribute[0]), attribute[1]));
+                        TextView v = new TextView(SchrankActivity.this);
+                        v.setText(attribute[1]);
+                        v.setTextSize(24);
+                        v.setTextColor(getResources().getColor(R.color.black));
+                        v.setBackgroundResource(R.drawable.textviewstyle);
+                        v.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                final View v = view;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SchrankActivity.this);
+                                builder.setTitle(R.string.schrank_loeschen_titel);
+                                builder.setMessage(R.string.schrank_loeschen);
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        delete(v);
+                                    }
+                                });
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                builder.show();
+                                return false;
+                            }
+                        });
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                open(view);
+                            }
+                        });
+                        Space s = new Space(SchrankActivity.this);
+                        s.setMinimumHeight(30);
+                        schraenke.addView(v);
+                        schraenke.addView(s);
+                    }catch (Exception e){e.printStackTrace();}
+
                 }
                 }
                 ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);

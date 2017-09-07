@@ -51,25 +51,23 @@ public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.Re
 
     @Override
     public RemoteViews getViewAt(int i) {
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.collection_widget_list_item);
         if(i<0||i>=daten.size())
-        return null;
+        return rv;
         else {
-            if(daten!=null){
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.collection_widget_list_item);
+            if(daten!=null&&daten.size()>i){
             rv.setTextViewText(R.id.widgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
-            rv.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent);
-            return rv;}
+            rv.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent);}
         else {
-            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.inhalt_widget_list_item);
             rv.setTextViewText(R.id.inhaltwidgetItemTaskNameLabel, mContext.getResources().getString(R.string.service_aus));
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(InhaltWidget.EXTRA_LABEL, "");
             rv.setOnClickFillInIntent(R.id.inhaltwidgetItemContainer, fillInIntent);
-            return rv;
         }
         }
+        return rv;
     }
 
     @Override
