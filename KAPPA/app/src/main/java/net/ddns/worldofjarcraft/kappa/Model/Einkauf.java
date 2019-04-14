@@ -1,6 +1,10 @@
 package net.ddns.worldofjarcraft.kappa.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Einkauf {
+
+    @SerializedName(value = "lebensmittel")
     private String Lebensmittel;
 
     private Benutzer nutzer;

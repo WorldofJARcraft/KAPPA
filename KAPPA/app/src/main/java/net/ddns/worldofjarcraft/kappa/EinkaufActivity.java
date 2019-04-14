@@ -23,7 +23,13 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import net.ddns.worldofjarcraft.kappa.Model.Einkauf;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
@@ -59,9 +65,9 @@ public class EinkaufActivity extends Activity {
         });
         aktualisieren();
     }
-    List<Pair<Integer,String>> einkäufe;
+    List<Einkauf> einkäufe;
     public void aktualisieren(){
-        String url = "https://worldofjarcraft.ddns.net/kappa/getEinkauf.php?mail="+data.mail+"&pw="+data.pw;
+        String url = Constants.Server_Adress +"/einkauf";
         AsyncResponse response = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
@@ -69,15 +75,13 @@ public class EinkaufActivity extends Activity {
                 prog.setVisibility(View.GONE);
                 LinearLayout layout = (LinearLayout) findViewById(R.id.einkaufsliste);
                 layout.removeAllViews();
+                Einkauf[] ret = new Gson().fromJson(output,Einkauf[].class);
                 einkäufe = new ArrayList<>();
-                if(!output.isEmpty()){
-                String[] angaben =output.split("\\|");
-
-                for(String einkauf:angaben){
-                    String[] teile = einkauf.split(";");
-                    einkäufe.add(new Pair<Integer, String>(Integer.parseInt(teile[0]),teile[1]));
+                if(ret==null) return;
+                for(Einkauf einkauf:ret){
+                    einkäufe.add(einkauf);
                     TextView v = new TextView(EinkaufActivity.this);
-                    v.setText(teile[1]);
+                    v.setText(einkauf.getLebensmittel());
                     v.setTextSize(24);
                     v.setTextColor(getResources().getColor(R.color.black));
                     v.setBackgroundResource(R.drawable.textviewstyle);
@@ -124,7 +128,6 @@ public class EinkaufActivity extends Activity {
                     layout.addView(v);
                     layout.addView(s);
                 }
-                }
             }
         };
         HTTP_Connection login = new HTTP_Connection(url,2);
@@ -147,11 +150,11 @@ public class EinkaufActivity extends Activity {
                 spaces++;
         }
         if(nummer!=-1){
-            Pair<Integer,String> ziel = einkäufe.get(nummer);
+            Einkauf ziel = einkäufe.get(nummer);
             AsyncResponse response = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
-                    if(output.equals("Erfolg")){
+                    if(output.equals("true")){
                         aktualisieren();
                     }
                     else
@@ -159,7 +162,7 @@ public class EinkaufActivity extends Activity {
                     aktualisieren();
                 }
             };
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/delete_Einkauf.php?mail="+data.mail+"&pw="+data.pw+"&id="+ziel.first);
+            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/einkauf/"+ziel.getId()+"/delete");
             conn.delegate = response;
             conn.execute("params");
         }
@@ -179,14 +182,21 @@ public class EinkaufActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(!input.getText().toString().isEmpty()){
-                String url = "https://worldofjarcraft.ddns.net/kappa/neuer_Einkauf.php?mail="+data.mail+"&pw="+data.pw+"&name="+input.getText().toString().replaceAll(" ","%20");
-                HTTP_Connection login = new HTTP_Connection(url,2);
-                AsyncResponse response = new AsyncResponse() {
+                String url = Constants.Server_Adress+"/einkauf/create";
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Einkauf",input.getText().toString());
+                    HTTP_Connection login = null;
+                    try {
+                        login = new HTTP_Connection(url,2,map,"GET");
+                    } catch (UnsupportedEncodingException e) {
+                        return;
+                    }
+                    AsyncResponse response = new AsyncResponse() {
                     @Override
                     public void processFinish(String output, String url) {
                         ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
                         prog.setVisibility(View.GONE);
-                        if(output.equals("Erfolg")){
+                        if(!output.isEmpty()){
                             aktualisieren();
                         }
                         else{
