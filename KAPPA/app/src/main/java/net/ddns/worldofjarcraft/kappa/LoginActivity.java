@@ -18,6 +18,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import net.ddns.worldofjarcraft.kappa.Model.Benutzer;
+
+import org.springframework.http.HttpMethod;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static net.ddns.worldofjarcraft.kappa.data.pw;
 
@@ -80,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString(LaunchActivity.user_preference, data.mail);
                                 editor.putString(LaunchActivity.user_password, data.pw);
                                 // Commit the edits!
-                                editor.commit();
+                                editor.apply();
                             }
                             dialogInterface.dismiss();
                             startActivity(new Intent(LoginActivity.this,LaunchActivity.class));
@@ -91,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-                else if (output.equals("false")){
+                else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage(R.string.login_impossible);
                     DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
@@ -103,9 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setPositiveButton("OK",posListener);
                     builder.show();
                 }
-                else{
-                    Toast.makeText(LoginActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
-                }
             }
         };
         EditText mail = (EditText) findViewById(R.id.mail);
@@ -114,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText pw = (EditText) findViewById(R.id.pw);
         String passw = pw.getText().toString();
         data.pw = passw;
-        HTTP_Connection login = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+email+"&pw="+passw+"",2);
+        HTTP_Connection login = new HTTP_Connection(Constants.Server_Adress+"/user/"+email,2);
         login.delegate = response;
         login.execute();
         ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
@@ -127,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("Antwort \""+output+"\" von \""+url+"\"");
                 ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
                 prog.setVisibility(View.GONE);
-                if(output.equals("Erfolg")){
+                if(output.equals("true")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage(R.string.signed_up);
                     DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
@@ -165,11 +172,21 @@ public class LoginActivity extends AppCompatActivity {
         EditText pw = (EditText) findViewById(R.id.pw);
         String passw = pw.getText().toString();
         data.pw = passw;
-        HTTP_Connection login = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/neuer_Benutzer.php?mail="+email+"&pw="+passw+"",2);
-        login.delegate = response;
-        login.execute();
-        ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
-        prog.setVisibility(View.VISIBLE);
+        HashMap<String,String> map = new HashMap<>();
+        map.put("EMail",email);
+        map.put("Password",passw);
+        HTTP_Connection login = null;
+        try {
+            login = new HTTP_Connection(Constants.Server_Adress+"/user/create",2,map, "GET");
+            login.setAuthenticated(false);
+            login.delegate = response;
+            login.execute();
+            ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
+            prog.setVisibility(View.VISIBLE);
+        } catch (UnsupportedEncodingException e) {
+            Toast.makeText(LoginActivity.this,R.string.can_not_encode_mail_or_pw,Toast.LENGTH_LONG).show();
+        }
+
     }
     private String passwort="";
     public void forgot_pw(){

@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -200,7 +200,7 @@ public class MHDCheckerService extends Service {
                                                     .setContentText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif))
                                                     .setSmallIcon(R.mipmap.schnee)
                                                     .setAutoCancel(false)
-                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(mBuilder.mContentText));
+                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif)));
 // Creates an explicit intent for an Activity in your app
                                             Intent resultIntent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
 

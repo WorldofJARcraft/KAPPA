@@ -58,7 +58,7 @@ public class LaunchActivity extends AppCompatActivity {
             data.mail=login.getString(user_preference,null);
             data.pw=login.getString(user_password,null);
             //prüfen, ob Daten gültig sind
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/user/"+data.mail,2);
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
@@ -99,7 +99,7 @@ public class LaunchActivity extends AppCompatActivity {
             data.mail=login.getString(user_preference,null);
             data.pw=login.getString(user_password,null);
             //prüfen, ob Daten gültig sind
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/user/"+data.mail,2);
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
@@ -200,7 +200,7 @@ public class LaunchActivity extends AppCompatActivity {
             data.mail=login.getString(user_preference,null);
             data.pw=login.getString(user_password,null);
             //prüfen, ob Daten gültig sind
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail="+data.mail+"&pw="+data.pw);
+            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/user/"+data.mail,2);
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
