@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import net.ddns.worldofjarcraft.kappa.Security.MyAuthenticator;
+import net.ddns.worldofjarcraft.kappa.Utils.StringUtils;
 
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpBasicAuthentication;
@@ -93,7 +94,7 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
             if (builder.length() != 0) builder.append('&');
             builder.append(URLEncoder.encode(key, "UTF-8"));
             builder.append('=');
-            builder.append(URLEncoder.encode(String.valueOf(value), "UTF-8"));
+            builder.append(Constants.BASE64Prefix).append(StringUtils.toBase64(value != null ? value : ""));
         }
         this.postContent = builder.toString();
     }
