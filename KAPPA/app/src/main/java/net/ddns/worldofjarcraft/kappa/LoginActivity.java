@@ -70,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+
     public void login(){
         AsyncResponse response = new AsyncResponse() {
             @Override
@@ -100,6 +102,17 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setCancelable(true);
                     AlertDialog dialog = builder.create();
                     dialog.show();
+                }
+                else if(output.isEmpty()){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle(R.string.ErrorUnerreichbar);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //do nothing
+                        }
+                    });
+                    builder.show();
                 }
                 else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);

@@ -46,6 +46,36 @@ public class LaunchActivity extends AppCompatActivity {
     BroadcastReceiver br;
     AlarmManager am;
 
+
+    private void checkUserResponse(String output){
+        if(output.equals("true")){
+            System.out.println("Daten korrekt!");
+        }
+        else if(output.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+            builder.setTitle(R.string.ErrorUnerreichbar);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //do nothing
+                }
+            });
+            builder.show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
+            builder.setTitle(R.string.unauth_titel);
+            builder.setMessage(R.string.unauth);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    setTheme(R.style.AppTheme);
+                    startActivity(new Intent(LaunchActivity.this, LoginActivity.class));
+                }
+            });
+            builder.show();
+        }
+    }
     Intent mServiceIntent;
     @Override
     protected void onStart(){
@@ -62,22 +92,7 @@ public class LaunchActivity extends AppCompatActivity {
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
-                    if(output.equals("true")){
-                        System.out.println("Daten korrekt!");
-                    }
-                    else{
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
-                        builder.setTitle(R.string.unauth_titel);
-                        builder.setMessage(R.string.unauth);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setTheme(R.style.AppTheme);
-                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
-                            }
-                        });
-                        builder.show();
-                    }
+                    checkUserResponse(output);
                 }
             };
             conn.execute("params");
@@ -103,22 +118,7 @@ public class LaunchActivity extends AppCompatActivity {
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
-                    if(output.equals("true")){
-                        System.out.println("Daten korrekt!");
-                    }
-                    else{
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
-                        builder.setTitle(R.string.unauth_titel);
-                        builder.setMessage(R.string.unauth);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setTheme(R.style.AppTheme);
-                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
-                            }
-                        });
-                        builder.show();
-                    }
+                    checkUserResponse(output);
                 }
             };
             conn.execute("params");
@@ -204,22 +204,7 @@ public class LaunchActivity extends AppCompatActivity {
             conn.delegate = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
-                    if(output.equals("true")){
-                        System.out.println("Daten korrekt!");
-                    }
-                    else{
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LaunchActivity.this);
-                        builder.setTitle(R.string.unauth_titel);
-                        builder.setMessage(R.string.unauth);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setTheme(R.style.AppTheme);
-                                startActivity(new Intent(LaunchActivity.this,LoginActivity.class));
-                            }
-                        });
-                        builder.show();
-                    }
+                    checkUserResponse(output);
                 }
             };
             conn.execute("params");

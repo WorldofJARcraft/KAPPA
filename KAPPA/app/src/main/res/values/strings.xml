@@ -17,6 +17,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="ErrorUnerreichbar">Der Kappa-Server ist leider aktuell nicht erreichbar.</string>
     <string name="Email">E-Mail</string>
     <string name="save_credentials">Anmeldedaten speichern</string>
     <string name="sign_in">Anmelden</string>
@@ -177,6 +179,8 @@
     <string name="essen_loeschen">Möchten Sie dieses Lebensmittel wirklich löschen?</string>
     <string name="fach_loeschen">Fach löschen</string>
     <string name="fach_loeschen_info">Möchten Sie dieses Fach wirklich löschen? Alle gespeicherten Lebensmittel gehen verloren.</string>
+    <string name="element_loeschen">Element löschen</string>
+    <string name="element_aktualisieren">Element aktualisieren</string>
     <string name="suche_LM">suche LM</string>
     <string name="title_activity_suche">SucheActivity</string>
     <string name="suche_name">KAPPA - Suche</string>

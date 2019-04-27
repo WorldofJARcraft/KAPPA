@@ -94,7 +94,15 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
             if (builder.length() != 0) builder.append('&');
             builder.append(URLEncoder.encode(key, "UTF-8"));
             builder.append('=');
-            builder.append(Constants.BASE64Prefix).append(StringUtils.toBase64(value != null ? value : ""));
+            //Content might be Integer. In this case, do not encode in base64.
+            try{
+                Double.parseDouble(value != null ? value : "");
+                builder.append(value);
+            }
+            catch (Exception e){
+                builder.append(Constants.BASE64Prefix).append(URLEncoder.encode(StringUtils.toBase64(value != null ? value : ""),"ASCII"));
+            }
+
         }
         this.postContent = builder.toString();
     }
@@ -115,7 +123,6 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
         //Annahme, alles wäre gut gegangen
         //Initialisierung eines StringBuilders
         //versuchen, Script zu starten und Daten davon auszulesen
-        url = url.replaceAll("ö", "oe").replaceAll("ü", "ue").replaceAll("ä", "ae").replaceAll("Ö", "Oe").replaceAll("Ü", "Ue").replaceAll("Ä", "Ae").replaceAll("ß", "ssss");
         if(authenticated) {
             Authenticator.setDefault(new MyAuthenticator());
         }

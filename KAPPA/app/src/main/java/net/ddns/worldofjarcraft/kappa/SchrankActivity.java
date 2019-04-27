@@ -8,17 +8,26 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Pair;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import net.ddns.worldofjarcraft.kappa.Model.Kuehlschrank;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SchrankActivity extends Activity {
@@ -50,9 +59,9 @@ public class SchrankActivity extends Activity {
         });
         aktualisieren();
     }
-    List<Pair<Integer,String>> liste;
+    List<Kuehlschrank> liste;
     public void aktualisieren(){
-        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+data.mail+"&pw="+data.pw,2);
+        HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/schrank/getAll");
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
@@ -60,13 +69,12 @@ public class SchrankActivity extends Activity {
                 schraenke.removeAllViews();
                 liste = new ArrayList<>();
                 if(!output.isEmpty()){
-                String[] boxen = output.split("\\|");
-                for(String box:boxen){
+                    Kuehlschrank[] schränke = new Gson().fromJson(output,Kuehlschrank[].class);
+                for(Kuehlschrank schrank:schränke){
                     try {
-                        String[] attribute = box.split(";");
-                        liste.add(new Pair<Integer, String>(new Integer(attribute[0]), attribute[1]));
+                        liste.add(schrank);
                         TextView v = new TextView(SchrankActivity.this);
-                        v.setText(attribute[1]);
+                        v.setText(schrank.getName());
                         v.setTextSize(24);
                         v.setTextColor(getResources().getColor(R.color.black));
                         v.setBackgroundResource(R.drawable.textviewstyle);
@@ -74,22 +82,23 @@ public class SchrankActivity extends Activity {
                             @Override
                             public boolean onLongClick(View view) {
                                 final View v = view;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SchrankActivity.this);
-                                builder.setTitle(R.string.schrank_loeschen_titel);
-                                builder.setMessage(R.string.schrank_loeschen);
-                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                PopupMenu popup = new PopupMenu(SchrankActivity.this, v);
+                                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        delete(v);
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()){
+                                            case R.id.delete:
+                                                delete(v);
+                                                break;
+                                            case R.id.update:
+                                                update(v);
+                                        }
+                                        return false;
                                     }
                                 });
-                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                builder.show();
+                                MenuInflater inflater = popup.getMenuInflater();
+                                inflater.inflate(R.menu.update_delete_menu, popup.getMenu());
+                                popup.show();
                                 return false;
                             }
                         });
@@ -115,23 +124,45 @@ public class SchrankActivity extends Activity {
         prog.setVisibility(View.VISIBLE);
         conn.execute("params");
     }
+
+    private void update(View v) {
+        System.out.println("Updating...");
+    }
+
     public void delete(View v){
-        System.out.println("Lösche Kühlschrank...");
-        int index = identify(v, (LinearLayout) findViewById(R.id.schraenkeListe));
-        if(index==-1){
-            aktualisieren();
-        }
-        else{
-        Pair<Integer,String> werte = liste.get(index);
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/delete_Schrank.php?mail="+data.mail+"&pw="+data.pw+"&id="+werte.first);
-            conn.delegate = new AsyncResponse() {
-                @Override
-                public void processFinish(String output, String url) {
+        final View view = v;
+        AlertDialog.Builder builder = new AlertDialog.Builder(SchrankActivity.this);
+        builder.setTitle(R.string.schrank_loeschen_titel);
+        builder.setMessage(R.string.schrank_loeschen);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int index = identify(view, (LinearLayout) findViewById(R.id.schraenkeListe));
+                if(index==-1){
                     aktualisieren();
                 }
-            };
-            conn.execute("params");
-        }
+                else{
+                    Kuehlschrank kuehlschrank = liste.get(index);
+                    HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/schrank/"+kuehlschrank.getLaufNummer()+"/delete");
+                    conn.delegate = new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output, String url) {
+                            aktualisieren();
+                        }
+                    };
+                    conn.execute("params");
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+        System.out.println("Lösche Kühlschrank...");
+
     }
 
     public void open(View v){
@@ -142,11 +173,11 @@ public class SchrankActivity extends Activity {
             aktualisieren();
         }
         else{
-            Pair<Integer,String> werte = liste.get(index);
+            Kuehlschrank schrank = liste.get(index);
             Intent intent = new Intent(SchrankActivity.this, InhaltActivity.class);
             Bundle b = new Bundle();
-            b.putInt("schrank", werte.first);
-            b.putString("name",werte.second);
+            b.putInt("schrank", schrank.getLaufNummer());
+            b.putString("name",schrank.getName());
             //Your id
             intent.putExtras(b); //Put your id to your next Intent
             startActivity(intent);
@@ -185,23 +216,31 @@ public class SchrankActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String url = "https://worldofjarcraft.ddns.net/kappa/neuer_Schrank.php?mail="+data.mail+"&pw="+data.pw+"&name="+input.getText().toString().replaceAll(" ","%20")+"&faecher=0";
-                HTTP_Connection login = new HTTP_Connection(url,2);
-                AsyncResponse response = new AsyncResponse() {
+                String url = Constants.Server_Adress+"/schrank/new";
+
+                HashMap<String,String> params = new HashMap<>();
+                params.put("name",input.getText().toString());
+                params.put("faecher","0");
+                HTTP_Connection login = null;
+                try {
+                    login = new HTTP_Connection(url,2,params,"GET");
+                } catch (UnsupportedEncodingException e) {
+                    return;
+                }
+                login.delegate = new AsyncResponse() {
                     @Override
-                    public void processFinish(String output, String url) {
-                        ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
-                        prog.setVisibility(View.GONE);
-                        if(output.equals("Erfolg")){
+                    public void processFinish(String output, String url1) {
+                        ProgressBar prog1 = (ProgressBar) findViewById(R.id.prog_schrank);
+                        prog1.setVisibility(View.GONE);
+                        if(!output.equals("Unauthorized!")){
                             aktualisieren();
                         }
                         else{
                             Toast.makeText(SchrankActivity.this,"Es ist ein Netzwerkfehler aufgetreten.",Toast.LENGTH_LONG).show();
-                            prog.setVisibility(View.GONE);
+                            prog1.setVisibility(View.GONE);
                         }
                     }
                 };
-                login.delegate = response;
                 login.execute();
                 ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
                 prog.setVisibility(View.VISIBLE);

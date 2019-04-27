@@ -59,7 +59,6 @@ public class MHDCheckerService extends Service {
     public Runnable runnable2=null;
     private String mail,pw;
     public void init(){
-        Toast.makeText(MHDCheckerService.this, R.string.service_neu_gestartet, Toast.LENGTH_LONG).show();
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
@@ -76,7 +75,7 @@ public class MHDCheckerService extends Service {
                             if (output.equals("true")) {
                                 System.out.println("Daten korrekt!");
                             } else {
-                                Toast.makeText(context, R.string.kann_nicht_aktualisieren, Toast.LENGTH_LONG).show();
+                                System.out.println(R.string.kann_nicht_aktualisieren);
                             }
                         }
                     };
@@ -294,6 +293,6 @@ public class MHDCheckerService extends Service {
 
     @Override
     public void onStart(Intent intent, int startid) {
-        Toast.makeText(this, R.string.ueberwachung_laeuft, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, R.string.ueberwachung_laeuft, Toast.LENGTH_LONG).show();
     }
 }
