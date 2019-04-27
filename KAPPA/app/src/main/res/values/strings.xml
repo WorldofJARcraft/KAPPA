@@ -138,6 +138,7 @@
     <string name="title_Schrankwahl">KAPPA - Kühlschrankauswahl</string>
     <string name="info_Name">Name des Kühlschranks:</string>
     <string name="neuer_Schrank">Kühlschrank hinzufügen:</string>
+    <string name="schrank_aktualisieren">Kühlschrankname bearbeiten:</string>
     <string name="info_faecher">Zahl der Fächer:</string>
     <string name="schrank_loeschen_titel">Löschen bestätigen</string>
     <string name="schrank_loeschen">Möchten Sie diesen Kühlschrank wirklich löschen?</string>

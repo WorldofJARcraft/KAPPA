@@ -126,7 +126,15 @@ public class SchrankActivity extends Activity {
     }
 
     private void update(View v) {
-        System.out.println("Updating...");
+        int index = identify(v, (LinearLayout) findViewById(R.id.schraenkeListe));
+        if(index==-1){
+            aktualisieren();
+        }
+
+        else {
+            Kuehlschrank schrank = liste.get(index);
+            alterSchrank(schrank.getLaufNummer()+"/update",R.string.schrank_aktualisieren,schrank.getZahl_Faecher());
+        }
     }
 
     public void delete(View v){
@@ -197,9 +205,14 @@ public class SchrankActivity extends Activity {
         }
         return  nummer;
     }
+
     public void addSchrank(){
+        alterSchrank("new",R.string.neuer_Schrank,0);
+    }
+
+    public void alterSchrank(final String path, int TitleID, final int faecher){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.neuer_Schrank);
+        builder.setTitle(TitleID);
 // Set up the input
         final TextView info_Name= new TextView(this);
         info_Name.setText(R.string.info_Name);
@@ -216,11 +229,11 @@ public class SchrankActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String url = Constants.Server_Adress+"/schrank/new";
+                String url = Constants.Server_Adress+"/schrank/"+path;
 
                 HashMap<String,String> params = new HashMap<>();
                 params.put("name",input.getText().toString());
-                params.put("faecher","0");
+                params.put("faecher",""+faecher);
                 HTTP_Connection login = null;
                 try {
                     login = new HTTP_Connection(url,2,params,"GET");
