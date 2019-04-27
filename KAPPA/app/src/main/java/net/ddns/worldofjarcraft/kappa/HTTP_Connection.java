@@ -195,11 +195,6 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
     protected void onPostExecute(String result) {
         //prüfen, ob das Resultat weiterzugeben ist
         if (delegate != null) {
-            //Prozedur processFinish des Interface "AsyncResponse" aufrufen --> dieses ist abstrakt und muss von einer Klasse implementiert werden;
-            //delegate muss zudem jene Klasse zugewiesen sein --> dann wird void in dieser Klasse ausgeführt, dem der Inhalt der Website übergeben wird,
-            //und so ist der Inhalt der Website in dieser Klasse verfügbar
-            if (!result.equals("true"))
-                result = result.replaceAll("oe", "ö").replaceAll("ue", "ü").replaceAll("ae", "ä").replaceAll("Oe", "ö").replaceAll("Ue", "Ü").replaceAll("Ae", "Ä").replaceAll("ssss", "ß");
             delegate.processFinish(result, url);
             System.out.println("Ergebnis:" + result);
         }
