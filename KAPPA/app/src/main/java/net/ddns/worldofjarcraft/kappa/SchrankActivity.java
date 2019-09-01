@@ -36,14 +36,14 @@ public class SchrankActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schrank);
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.neuerSchrank);
+        FloatingActionButton button = findViewById(R.id.neuerSchrank);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addSchrank();
             }
         });
-        FloatingActionButton akt = (FloatingActionButton) findViewById(R.id.reloadSchraenke);
+        FloatingActionButton akt = findViewById(R.id.reloadSchraenke);
         akt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,12 +65,12 @@ public class SchrankActivity extends Activity {
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
-                LinearLayout schraenke = (LinearLayout) findViewById(R.id.schraenkeListe);
+                LinearLayout schraenke = findViewById(R.id.schraenkeListe);
                 schraenke.removeAllViews();
                 liste = new ArrayList<>();
                 if(!output.isEmpty()){
-                    Kuehlschrank[] schränke = new Gson().fromJson(output,Kuehlschrank[].class);
-                for(Kuehlschrank schrank:schränke){
+                    Kuehlschrank[] kuehlschranks = new Gson().fromJson(output,Kuehlschrank[].class);
+                for(Kuehlschrank schrank:kuehlschranks){
                     try {
                         liste.add(schrank);
                         TextView v = new TextView(SchrankActivity.this);
@@ -116,11 +116,11 @@ public class SchrankActivity extends Activity {
 
                 }
                 }
-                ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
+                ProgressBar prog = findViewById(R.id.prog_schrank);
                 prog.setVisibility(View.GONE);
             }
         };
-        ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
+        ProgressBar prog = findViewById(R.id.prog_schrank);
         prog.setVisibility(View.VISIBLE);
         conn.execute("params");
     }
@@ -152,6 +152,7 @@ public class SchrankActivity extends Activity {
                 else{
                     Kuehlschrank kuehlschrank = liste.get(index);
                     HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/schrank/"+kuehlschrank.getLaufNummer()+"/delete");
+                    conn.setMethod("DELETE");
                     conn.delegate = new AsyncResponse() {
                         @Override
                         public void processFinish(String output, String url) {
@@ -234,16 +235,16 @@ public class SchrankActivity extends Activity {
                 HashMap<String,String> params = new HashMap<>();
                 params.put("name",input.getText().toString());
                 params.put("faecher",""+faecher);
-                HTTP_Connection login = null;
+                HTTP_Connection login;
                 try {
-                    login = new HTTP_Connection(url,2,params,"GET");
+                    login = new HTTP_Connection(url,2,params,"POST");
                 } catch (UnsupportedEncodingException e) {
                     return;
                 }
                 login.delegate = new AsyncResponse() {
                     @Override
                     public void processFinish(String output, String url1) {
-                        ProgressBar prog1 = (ProgressBar) findViewById(R.id.prog_schrank);
+                        ProgressBar prog1 = findViewById(R.id.prog_schrank);
                         prog1.setVisibility(View.GONE);
                         if(!output.equals("Unauthorized!")){
                             aktualisieren();
@@ -255,7 +256,7 @@ public class SchrankActivity extends Activity {
                     }
                 };
                 login.execute();
-                ProgressBar prog = (ProgressBar) findViewById(R.id.prog_schrank);
+                ProgressBar prog = findViewById(R.id.prog_schrank);
                 prog.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }

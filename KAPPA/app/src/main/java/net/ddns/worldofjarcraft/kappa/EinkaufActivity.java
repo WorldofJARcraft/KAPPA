@@ -1,23 +1,18 @@
 package net.ddns.worldofjarcraft.kappa;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.InputType;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.TextView;
@@ -32,17 +27,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static android.os.Build.VERSION_CODES.M;
-import static net.ddns.worldofjarcraft.kappa.R.id.reloadButton;
-
 public class EinkaufActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_einkauf);
-       FloatingActionButton fab = findViewById(R.id.neuerEinkauf);
+        FloatingActionButton fab = findViewById(R.id.neuerEinkauf);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,21 +56,23 @@ public class EinkaufActivity extends Activity {
         });
         aktualisieren();
     }
-    List<Einkauf> einkäufe;
-    public void aktualisieren(){
-        String url = Constants.Server_Adress +"/einkauf";
+
+    List<Einkauf> einkaufList;
+
+    public void aktualisieren() {
+        String url = Constants.Server_Adress + "/einkauf";
         AsyncResponse response = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
-                ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
+                ProgressBar prog = findViewById(R.id.fortschritt);
                 prog.setVisibility(View.GONE);
-                LinearLayout layout = (LinearLayout) findViewById(R.id.einkaufsliste);
+                LinearLayout layout =  findViewById(R.id.einkaufsliste);
                 layout.removeAllViews();
-                Einkauf[] ret = new Gson().fromJson(output,Einkauf[].class);
-                einkäufe = new ArrayList<>();
-                if(ret==null) return;
-                for(Einkauf einkauf:ret){
-                    einkäufe.add(einkauf);
+                Einkauf[] ret = new Gson().fromJson(output, Einkauf[].class);
+                einkaufList = new ArrayList<>();
+                if (ret == null) return;
+                for (Einkauf einkauf : ret) {
+                    einkaufList.add(einkauf);
                     TextView v = new TextView(EinkaufActivity.this);
                     v.setText(einkauf.getLebensmittel());
                     v.setTextSize(24);
@@ -89,22 +82,23 @@ public class EinkaufActivity extends Activity {
                         @Override
                         public boolean onLongClick(View view) {
                             final View v = view;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EinkaufActivity.this);
-                            builder.setTitle(R.string.einkauf_loeschen_titel);
-                            builder.setMessage(R.string.einkauf_loeschen);
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            PopupMenu popup = new PopupMenu(EinkaufActivity.this, v);
+                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    delete(v);
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    switch (item.getItemId()) {
+                                        case R.id.delete:
+                                            deleteEinkauf(v);
+                                            break;
+                                        case R.id.update:
+                                            update(v);
+                                    }
+                                    return false;
                                 }
                             });
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                            builder.show();
+                            MenuInflater inflater = popup.getMenuInflater();
+                            inflater.inflate(R.menu.update_delete_menu, popup.getMenu());
+                            popup.show();
                             return false;
                         }
                     });
@@ -130,45 +124,133 @@ public class EinkaufActivity extends Activity {
                 }
             }
         };
-        HTTP_Connection login = new HTTP_Connection(url,2);
+        HTTP_Connection login = new HTTP_Connection(url, 2);
         login.delegate = response;
         login.execute();
-        ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
+        ProgressBar prog = findViewById(R.id.fortschritt);
         prog.setVisibility(View.VISIBLE);
     }
 
+    private boolean deleteEinkauf(View view) {
+        final View v = view;
+        AlertDialog.Builder builder = new AlertDialog.Builder(EinkaufActivity.this);
+        builder.setTitle(R.string.einkauf_loeschen_titel);
+        builder.setMessage(R.string.einkauf_loeschen);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                delete(v);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+        return false;
+    }
+
     private void delete(View view) {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.einkaufsliste);
+        LinearLayout layout = findViewById(R.id.einkaufsliste);
         int nummer = -1;
         int spaces = 0;
-        for(int i=0;i<layout.getChildCount();i++){
+        for (int i = 0; i < layout.getChildCount(); i++) {
             View v = layout.getChildAt(i);
-                if(v==view){
-                    nummer=i-spaces;
-                }
-            else if (v instanceof Space)
+            if (v == view) {
+                nummer = i - spaces;
+            } else if (v instanceof Space)
                 spaces++;
         }
-        if(nummer!=-1){
-            Einkauf ziel = einkäufe.get(nummer);
+        if (nummer != -1) {
+            Einkauf ziel = einkaufList.get(nummer);
             AsyncResponse response = new AsyncResponse() {
                 @Override
                 public void processFinish(String output, String url) {
-                    if(output.equals("true")){
+                    if (output.equals("true")) {
                         aktualisieren();
-                    }
-                    else
+                    } else
                         Toast.makeText(EinkaufActivity.this, "Eintrag konnte nicht gelöscht werden!", Toast.LENGTH_LONG).show();
                     aktualisieren();
                 }
             };
-            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/einkauf/"+ziel.getId()+"/delete");
+            HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress + "/einkauf/" + ziel.getId() + "/delete");
+            conn.setMethod("DELETE");
             conn.delegate = response;
             conn.execute("params");
         }
     }
 
-    public void neuerEinkauf(){
+    private void update(View view) {
+        //Einkauf suchen
+        LinearLayout layout = findViewById(R.id.einkaufsliste);
+        int nummer = -1;
+        int spaces = 0;
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View v = layout.getChildAt(i);
+            if (v == view) {
+                nummer = i - spaces;
+            } else if (v instanceof Space)
+                spaces++;
+        }
+        if (nummer != -1) {
+            final Einkauf ziel = einkaufList.get(nummer);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.update_Einkauf);
+            builder.setMessage(R.string.Einkauf_Beschreibung);
+// Set up the input
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+            builder.setView(input);
+
+// Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (!input.getText().toString().isEmpty()) {
+                        String url = Constants.Server_Adress + "/einkauf/"+ziel.getId()+"/update";
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("newValue", input.getText().toString());
+                        HTTP_Connection login;
+                        try {
+                            login = new HTTP_Connection(url, 2, map, "POST");
+                        } catch (UnsupportedEncodingException e) {
+                            return;
+                        }
+                        login.delegate = new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output, String url1) {
+                                ProgressBar prog1 = (ProgressBar) findViewById(R.id.fortschritt);
+                                prog1.setVisibility(View.GONE);
+                                if (!output.isEmpty()) {
+                                    aktualisieren();
+                                } else {
+                                    Toast.makeText(EinkaufActivity.this, "Es ist ein Netzwerkfehler aufgetreten.", Toast.LENGTH_LONG).show();
+                                    prog1.setVisibility(View.GONE);
+                                }
+                            }
+                        };
+                        login.execute();
+                        ProgressBar prog = findViewById(R.id.fortschritt);
+                        prog.setVisibility(View.VISIBLE);
+                    } else
+                        Toast.makeText(EinkaufActivity.this, R.string.name_leer, Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+        }
+    }
+
+    public void neuerEinkauf() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.neuer_Einkauf);
         builder.setMessage(R.string.Einkauf_Beschreibung);
@@ -181,37 +263,34 @@ public class EinkaufActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(!input.getText().toString().isEmpty()){
-                String url = Constants.Server_Adress+"/einkauf/create";
-                HashMap<String,String> map = new HashMap<>();
-                map.put("Einkauf",input.getText().toString());
-                    HTTP_Connection login = null;
+                if (!input.getText().toString().isEmpty()) {
+                    String url = Constants.Server_Adress + "/einkauf/create";
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Einkauf", input.getText().toString());
+                    HTTP_Connection login;
                     try {
-                        login = new HTTP_Connection(url,2,map,"GET");
+                        login = new HTTP_Connection(url, 2, map, "POST");
                     } catch (UnsupportedEncodingException e) {
                         return;
                     }
-                    AsyncResponse response = new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output, String url) {
-                        ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
-                        prog.setVisibility(View.GONE);
-                        if(!output.isEmpty()){
-                            aktualisieren();
+                    login.delegate = new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output, String url1) {
+                            ProgressBar prog1 = findViewById(R.id.fortschritt);
+                            prog1.setVisibility(View.GONE);
+                            if (!output.isEmpty()) {
+                                aktualisieren();
+                            } else {
+                                Toast.makeText(EinkaufActivity.this, "Es ist ein Netzwerkfehler aufgetreten.", Toast.LENGTH_LONG).show();
+                                prog1.setVisibility(View.GONE);
+                            }
                         }
-                        else{
-                            Toast.makeText(EinkaufActivity.this,"Es ist ein Netzwerkfehler aufgetreten.",Toast.LENGTH_LONG).show();
-                            prog.setVisibility(View.GONE);
-                        }
-                    }
-                };
-                login.delegate = response;
-                login.execute();
-                ProgressBar prog = (ProgressBar) findViewById(R.id.fortschritt);
-                prog.setVisibility(View.VISIBLE);
-                }
-                else
-                    Toast.makeText(EinkaufActivity.this,R.string.name_leer,Toast.LENGTH_LONG).show();
+                    };
+                    login.execute();
+                    ProgressBar prog = findViewById(R.id.fortschritt);
+                    prog.setVisibility(View.VISIBLE);
+                } else
+                    Toast.makeText(EinkaufActivity.this, R.string.name_leer, Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -225,7 +304,7 @@ public class EinkaufActivity extends Activity {
         builder.show();
     }
 
-    public void back(View view){
-       this.finish();
+    public void back(View view) {
+        this.finish();
     }
 }

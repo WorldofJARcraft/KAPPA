@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -113,20 +114,20 @@ public class InhaltActivity extends Activity {
             nr = b.getInt("schrank");
             name = b.getString("name");
         }
-        DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout layout = findViewById(R.id.drawer_layout);
         layout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
 
             }
 
             @Override
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(@NonNull View drawerView) {
                 ladeFaecher();
             }
 
             @Override
-            public void onDrawerClosed(View drawerView) {
+            public void onDrawerClosed(@NonNull View drawerView) {
             }
 
             @Override
@@ -138,7 +139,7 @@ public class InhaltActivity extends Activity {
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                DrawerLayout layout = findViewById(R.id.drawer_layout);
                 layout.openDrawer(GravityCompat.START);
             }
         });
@@ -152,7 +153,7 @@ public class InhaltActivity extends Activity {
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));*/
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        FloatingActionButton button = findViewById(R.id.floatingActionButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +182,7 @@ public class InhaltActivity extends Activity {
         int index = aktFach.getItemId();
         Fach fach = faecher.get(index);
         HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/delete");
+        conn.setMethod("DELETE");
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
@@ -260,9 +262,9 @@ public class InhaltActivity extends Activity {
                                     cal.set(i, i1, i2);
                                     long time = cal.getTimeInMillis();
                                     params.put("haltbarkeit", time + "");
-                                    HTTP_Connection conn = null;
+                                    HTTP_Connection conn;
                                     try {
-                                        conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/" + path, 3, params, "GET");
+                                        conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/" + path, 3, params, "POST");
                                     } catch (UnsupportedEncodingException e) {
                                         return;
                                     }
@@ -282,9 +284,9 @@ public class InhaltActivity extends Activity {
                         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         dialog.show();
                     } else {
-                        HTTP_Connection conn = null;
+                        HTTP_Connection conn;
                         try {
-                            conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/" + path, 3, params, "GET");
+                            conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/" + path, 3, params, "POST");
                         } catch (UnsupportedEncodingException e) {
                             return;
                         }
@@ -329,13 +331,13 @@ public class InhaltActivity extends Activity {
             public void processFinish(String output, String url) {
                 Fach[] neuefaecher = new Gson().fromJson(output, Fach[].class);
                 faecher = new ArrayList<>();
-                NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+                NavigationView navigationView = findViewById(R.id.navigation);
                 TextView view = navigationView.findViewById(R.id.drawerHeaderTitle);
                 ImageButton close = navigationView.findViewById(R.id.closeMenuButton);
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                        DrawerLayout layout = findViewById(R.id.drawer_layout);
                         layout.closeDrawer(GravityCompat.START);
                     }
                 });
@@ -618,6 +620,7 @@ public class InhaltActivity extends Activity {
                         Fach fach = faecher.get(fachIndex);
                         int order_id = lebensmittels.get(index - 1).getNummer();
                         HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress + "/schrank/" + nr + "/" + fach.getlNummer() + "/" + order_id + "/delete");
+                        conn.setMethod("DELETE");
                         conn.delegate = new AsyncResponse() {
                             @Override
                             public void processFinish(String output, String url) {
@@ -672,9 +675,9 @@ public class InhaltActivity extends Activity {
                 String url = Constants.Server_Adress + "/schrank/" + nr + "/" + path;
                 HashMap<String, String> params = new HashMap<>();
                 params.put(paramName, input.getText().toString());
-                HTTP_Connection login = null;
+                HTTP_Connection login;
                 try {
-                    login = new HTTP_Connection(url, 2, params, "GET");
+                    login = new HTTP_Connection(url, 2, params, "POST");
                 } catch (UnsupportedEncodingException e) {
                     return;
                 }

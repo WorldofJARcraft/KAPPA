@@ -53,13 +53,13 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
     /**
      * speichert die aufzurufende URL
      */
-    private String url = "";
+    private String url;
 
     private String method = "GET";
     private String postContent = "";
 
     //maximale Wiederholungen. Default 10.
-    int mMaxRetries = 3;
+    private int mMaxRetries = 3;
 
     /**
      * Hauptkonstruktor der Klasse. Maximalzahl an Verbindungsversuchen ist 3.
@@ -82,6 +82,14 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
         //übergebene Werte in globalen Variablen speichern
         this.url = nachricht;
         this.mMaxRetries = mMaxRetries;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public HTTP_Connection(String url, int mMaxRetries, HashMap<String,String> postParams, String method) throws UnsupportedEncodingException {
@@ -137,16 +145,18 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
         try {
             if(method.equals("POST")){
                 urlConnection.setDoOutput(true);
-                urlConnection.setChunkedStreamingMode(0);
+                //urlConnection.setChunkedStreamingMode(0);
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(postContent);
+                writer.flush();
                 writer.close();
+                urlConnection.getOutputStream().close();
             }
             urlConnection.connect();
             if(urlConnection.getResponseCode() / 100 != 2){
                 System.out.println("Got response code "+urlConnection.getResponseCode()+" for URL "+url);
-                return null;
+                return "";
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String line;
@@ -178,6 +188,9 @@ public class HTTP_Connection extends AsyncTask<Object, Void, String> {
             } catch (Exception exception) {
                 /* You might want to log the exception everytime, do it here. */
                 //mException = exception;
+                if(exception.getMessage().contains("Too many follow-up requests")){
+                    return "unauthorised";
+                }
                 exception.printStackTrace();
                 result="";
             }

@@ -130,6 +130,7 @@
     <string name="title_activity_einkaufslisten">EinkaufslistenActivity</string>
     <string name="einkaeufe">Ihre Einkaufsliste:</string>
     <string name="neuer_Einkauf">Einkauf hinzufügen</string>
+    <string name="update_Einkauf">Einkauf ändern</string>
     <string name="einkauf_loeschen_titel">Löschen bestätigen</string>
     <string name="einkauf_loeschen">Diesen Eintrag wirklich löschen?</string>
     <string name="Einkauf_Beschreibung">Bitte geben Sie den zu erledigenden Einkauf ein!</string>
@@ -161,7 +162,6 @@
     <string name="update_Fach">Fach ändern</string>
     <string name="add_Fach">Fach hinzufügen</string>
     <string name="add_Fach_info">Name des Fachs:</string>
-    <string name="title_activity_aader"></string>
     <string name="neues_LM">Neues Lebensmittel hinzufügen</string>
     <string name="LM_aendern">Lebensmittel ändern</string>
     <string name="info_Name_LM">Name des Lebensmittels:</string>
