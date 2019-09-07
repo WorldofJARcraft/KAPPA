@@ -11,7 +11,7 @@ import android.widget.RemoteViewsService;
 public class InhaltWidgetRemoteViewsService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        Log.e("Übergeben",intent.getStringExtra(InhaltWidget.KEY_SCHRANK)+";"+intent.getStringExtra(InhaltWidget.KEY_FACH));
+        Log.e("Übergeben",intent.getIntExtra(InhaltWidget.KEY_SCHRANK,-1)+";"+intent.getIntExtra(InhaltWidget.KEY_FACH,-1));
         return new InhaltWidgetRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }

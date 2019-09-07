@@ -504,7 +504,6 @@ public class InhaltActivity extends Activity {
                         long mhd = lebensmittel.getHaltbarkeitsdatum();
                         if (mhd > 0) {
                             long rest = mhd - Calendar.getInstance().getTimeInMillis();
-                            long aktzeit = Calendar.getInstance().getTimeInMillis();
                             if (rest > 0) {
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTimeInMillis(rest);

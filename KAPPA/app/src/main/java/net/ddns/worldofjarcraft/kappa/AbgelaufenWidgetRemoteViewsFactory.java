@@ -56,7 +56,7 @@ public class AbgelaufenWidgetRemoteViewsFactory implements RemoteViewsService.Re
         return rv;
         else {
             if(daten!=null&&daten.size()>i){
-            rv.setTextViewText(R.id.widgetItemTaskNameLabel,daten.get(i)[0]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
+            rv.setTextViewText(R.id.widgetItemTaskNameLabel,daten.get(i)[0]+", "+mContext.getResources().getString(R.string.haltbarkeit)+daten.get(i)[2]+"("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[3]+")");
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(CollectionAppWidgetProvider.EXTRA_LABEL, daten.get(i)[0]+" ("+mContext.getResources().getString(R.string.haltbarkeit)+": "+daten.get(i)[2]+")");
             rv.setOnClickFillInIntent(R.id.widgetItemContainer, fillInIntent);}

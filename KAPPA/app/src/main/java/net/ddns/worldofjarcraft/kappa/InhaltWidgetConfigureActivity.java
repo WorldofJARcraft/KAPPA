@@ -28,7 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import net.ddns.worldofjarcraft.kappa.Model.Fach;
+import net.ddns.worldofjarcraft.kappa.Model.Kuehlschrank;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,7 +64,7 @@ public class InhaltWidgetConfigureActivity extends Activity {
 
             Spinner s1 = findViewById(R.id.schrankSpinner);
             Spinner s2 = findViewById(R.id.FachSpinner);
-            saveTitlePref(context, mAppWidgetId, s1.getSelectedItem().toString(),s2.getSelectedItem().toString());
+            saveTitlePref(context, mAppWidgetId, kuehlschranks[s1.getSelectedItemPosition()],results[s2.getSelectedItemPosition()]);
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -78,23 +84,23 @@ public class InhaltWidgetConfigureActivity extends Activity {
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveTitlePref(Context context, int appWidgetId, String schrank, String fach) {
+    static void saveTitlePref(Context context, int appWidgetId, Kuehlschrank schrank, Fach fach) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, schrank);
-        prefs.putString(PREF_FACH_KEY+appWidgetId, fach);
+        prefs.putInt(PREF_PREFIX_KEY + appWidgetId, schrank.getLaufNummer());
+        prefs.putInt(PREF_FACH_KEY+appWidgetId, fach.getlNummer());
         prefs.apply();
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
     // If there is no preference saved, get the default from a resource
-    static Pair<String,String> loadTitlePref(Context context, int appWidgetId) {
+    static Pair<Integer,Integer> loadTitlePref(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-        String fach = prefs.getString(PREF_FACH_KEY+appWidgetId,null);
-        if (titleValue != null && fach!=null) {
+        int titleValue = prefs.getInt(PREF_PREFIX_KEY + appWidgetId, -1);
+        int fach = prefs.getInt(PREF_FACH_KEY+appWidgetId,-1);
+        if (titleValue != -1 && fach!=-1) {
             return new Pair<>(titleValue,fach);
         } else {
-            return new Pair<>("","");
+            return new Pair<>(-1,-1);
         }
     }
 
@@ -105,7 +111,8 @@ public class InhaltWidgetConfigureActivity extends Activity {
     }
     List<String> liste;
     List<String> faecher;
-    String mail,pw;
+    Kuehlschrank[] kuehlschranks;
+    Fach[] results;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -130,65 +137,31 @@ public class InhaltWidgetConfigureActivity extends Activity {
             finish();
             return;
         }
-        SharedPreferences login = getSharedPreferences(login_name, MODE_PRIVATE);
-        if ((login.contains(user_preference) && login.contains(user_password))) {
-            System.out.println("Melde mich mit gespeiucherten Daten an!");
-            mail = login.getString(user_preference, null);
-            pw = login.getString(user_password, null);
-            //prüfen, ob Daten gültig sind
-            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail=" + mail + "&pw=" + pw);
-            conn.delegate = new AsyncResponse() {
-                @Override
-                public void processFinish(String output, String url) {
-                    if (output.equals("true")) {
-                        System.out.println("Daten korrekt!");
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.kann_nicht_aktualisieren, Toast.LENGTH_LONG).show();
-                    }
-                }
-            };
-            conn.execute("params");
-        }
-        else
-            mail=pw=null;
-        HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+mail+"&pw="+pw,2);
+        HTTP_Connection conn = new HTTP_Connection(Constants.Server_Adress+"/schrank/getAll",2);
         conn.delegate = new AsyncResponse() {
             @Override
             public void processFinish(String output, String url) {
+                kuehlschranks = new Gson().fromJson(output, Kuehlschrank[].class) == null? new Kuehlschrank[0]: new Gson().fromJson(output, Kuehlschrank[].class);
                 liste = new ArrayList<>();
-                if(!output.isEmpty()){
-                    String[] boxen = output.split("\\|");
-                    for(String box:boxen){
-                        String[] attribute = box.split(";");
-                        if(attribute.length>1)
-                        liste.add(attribute[1]);
-                        else {
-                            Toast.makeText(getApplicationContext(),R.string.network_error,Toast.LENGTH_LONG).show();
-                        }
-                    }
+                for(Kuehlschrank schrank : kuehlschranks){
+                    liste.add(schrank.getName());
                 }
-            Spinner schrank = findViewById(R.id.schrankSpinner);
+                Spinner schrank = findViewById(R.id.schrankSpinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(InhaltWidgetConfigureActivity.this,R.layout.simple_spinner_item,liste);
                 adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                 schrank.setAdapter(adapter);
                 schrank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        String url = "https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+mail+"&pw="+pw+"&schrank="+liste.get(adapterView.getSelectedItemPosition());
+                        String url = Constants.Server_Adress+ "/schrank/"+ kuehlschranks[adapterView.getSelectedItemPosition()].getLaufNummer()+"/getAll";
                         HTTP_Connection conn = new HTTP_Connection(url,1);
                         conn.delegate = new AsyncResponse() {
                             @Override
                             public void processFinish(String output, String url) {
-                                String[] neuefaecher = output.split("\\|");
                                 faecher = new ArrayList<>();
-                                for(String fach:neuefaecher){
-                                    String[] werte = fach.split(";");
-                                    if(werte.length>=2){
-                                        faecher.add(werte[1]);
-                                    }
-                                    else {
-                                        Toast.makeText(getApplicationContext(),R.string.network_error,Toast.LENGTH_LONG).show();
-                                    }
+                                results = new Gson().fromJson(output, Fach[].class);
+                                for(Fach fach:results){
+                                    faecher.add(fach.getName());
                                 }
                             Spinner fachSpinner = findViewById(R.id.FachSpinner);
                                 ArrayAdapter<String> adapter = new ArrayAdapter<>(InhaltWidgetConfigureActivity.this,R.layout.simple_spinner_item,faecher);

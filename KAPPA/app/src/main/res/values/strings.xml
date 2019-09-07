@@ -281,6 +281,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="haltbarkeit">Haltbarkeit</string>
+    <string name="eingelagert">eingelagert am</string>
     <string name="ablaufend">Ablaufende / abgelaufene Lebensmittel</string>
     <string name="configure">Configure</string>
     <string name="config">Widget konfigurieren</string>
