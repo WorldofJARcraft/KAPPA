@@ -24,6 +24,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import net.ddns.worldofjarcraft.kappa.Model.Lebensmittel;
+
+import java.io.UnsupportedEncodingException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,194 +58,129 @@ public class MHDCheckerService extends Service {
     }
     HashMap<Integer,String> schrankListe;
     HashMap<Integer,Pair<Integer,String>> fachListe;
-    public static ArrayList<String[]> ablaufend;
+    public static final ArrayList<String[]> ablaufend = new ArrayList<>();
     public static ArrayList<String[] > alle_lebensmittel;
     public Handler handler2=null;
     public Runnable runnable2=null;
     private String mail,pw;
-    public void init(){
+    public void init() {
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
+                ablaufend.clear();
                 SharedPreferences login = context.getSharedPreferences(login_name, MODE_PRIVATE);
                 if ((login.contains(user_preference) && login.contains(user_password)) || (data.mail != null && data.pw != null)) {
                     System.out.println("Melde mich mit gespeiucherten Daten an!");
                     mail = login.getString(user_preference, null);
                     pw = login.getString(user_password, null);
                     //prüfen, ob Daten gültig sind
-                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/check_Passwort.php?mail=" + mail + "&pw=" + pw);
-                    conn.delegate = new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output, String url) {
-                            if (output.equals("true")) {
-                                System.out.println("Daten korrekt!");
-                            } else {
-                                System.out.println(R.string.kann_nicht_aktualisieren);
-                            }
-                        }
-                    };
-                    conn.execute("params");
-                }
-                else
-                    mail=pw=null;
-                HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/getSchrank.php?mail="+mail+"&pw="+pw);
+                } else
+                    mail = pw = null;
+
+                HTTP_Connection conn = null;
+                conn = new HTTP_Connection(Constants.Server_Adress + "/lebensmittel/getAll", 2);
                 conn.delegate = new AsyncResponse() {
                     @Override
                     public void processFinish(String output, String url) {
-                        schrankListe = new HashMap<>();
-                        fachListe = new HashMap<>();
-                        if(!output.isEmpty()){
+                        boolean fehler = false;
+                        for (Lebensmittel lm : new Gson().fromJson(output, Lebensmittel[].class)) {
+                            try {
+                                long mhd = lm.getHaltbarkeitsdatum();
+                                if (mhd > 0) {
+                                    long rest = mhd - Calendar.getInstance().getTimeInMillis();
+                                    if (rest > 0) {
+                                        Calendar cal = Calendar.getInstance();
+                                        cal.setTimeInMillis(rest);
+                                        String text = "";
+                                        long year = cal.get(Calendar.YEAR), month = cal.get(Calendar.MONTH), day = Calendar.DAY_OF_MONTH;
+                                        System.out.println(year + "," + month + "," + day);
 
-                            final String[] schranenke = output.split("\\|");
+                                        if (cal.get(Calendar.YEAR) - 1970 == 0 && cal.get(Calendar.MONTH) == 0 && cal.get(Calendar.DAY_OF_MONTH) < 8) {
+                                            String[] angaben = new String[5];
+                                            angaben[0] = lm.getName();
+                                            angaben[1] = lm.getAnzahl();
+                                            angaben[2] = cal.get(Calendar.DAY_OF_MONTH) + " " + getResources().getString(R.string.tage) + ".";
+                                            angaben[3] = lm.getFach().getName();
+                                            angaben[4] = lm.getFach().getKuehlschrank().getName();
+                                            ablaufend.add(angaben);
 
-                            for(String schrank:schranenke){
-                                String[] attribute = schrank.split(";");
-                                Integer key = -1;
-                                try {
-                                    key = new Integer(attribute[0]);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
-                                if(key>=0){
-                                    schrankListe.put(key,attribute[1]);
-                                    HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/get_Fach.php?mail="+mail+"&pw="+pw+"&schrank="+attribute[1]);
-                                    conn.delegate = new AsyncResponse() {
-                                        @Override
-                                        public void processFinish(String output, String url) {
-                                            if(!output.isEmpty()){
-                                                String[] faecher = output.split("\\|");
-                                                for(String fach:faecher){
-                                                    final String[] attribute = fach.split(";");
-                                                    Integer key = -1;
-                                                    Integer schrank = -1;
-                                                    try {
-                                                        key = new Integer(attribute[0]);
-                                                        schrank = Integer.valueOf(attribute[2]);
-                                                    }catch (Exception e){
-                                                        e.printStackTrace();
-                                                    }
-                                                    if(key>=0&&schrank>=0){
-                                                        Pair<Integer,String> paar = new Pair<>(schrank,attribute[1]);
-                                                        fachListe.put(key,paar);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    };
-                                    conn.execute("");
-                                }
-                            }
-                            HTTP_Connection conn = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/search.php?mail="+mail+"&pw="+pw);
-                            conn.delegate = new AsyncResponse() {
-                                @Override
-                                public void processFinish(String output, String url) {
-                                    boolean fehler = false;
-                                    if(!output.isEmpty()){
-                                        ablaufend = new ArrayList<>();
-                                        String[] lebensmittel = output.split("\\|");
-                                        for(String lm:lebensmittel){
-                                            String[] werte = lm.split(";");
-                                            try {
-                                                Long mhd = new Long(werte[3]);
-                                                if(mhd>0){
-                                                    long rest = mhd - Calendar.getInstance().getTimeInMillis();
-                                                    if(rest>0){
-                                                        Calendar cal = Calendar.getInstance();
-                                                        cal.setTimeInMillis(rest);
-                                                        String text="";
-                                                        long year = cal.get(Calendar.YEAR), month = cal.get(Calendar.MONTH), day= Calendar.DAY_OF_MONTH;
-                                                        System.out.println(year+","+month+","+day);
-
-                                                        if(cal.get(Calendar.YEAR)-1970==0&&cal.get(Calendar.MONTH)==0&&cal.get(Calendar.DAY_OF_MONTH)<8){
-                                                            String[] angaben = new String[5];
-                                                            angaben[0] = werte[1];
-                                                            angaben[1] = werte[2];
-                                                            angaben[2] = cal.get(Calendar.DAY_OF_MONTH)+" " + getResources().getString(R.string.tage)+".";
-                                                            if(fachListe.containsKey(Integer.valueOf(werte[4]))&&schrankListe.containsKey(fachListe.get(Integer.valueOf(werte[4])).first)){
-                                                            angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
-                                                            angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
-                                                            ablaufend.add(angaben);
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        String[] angaben = new String[5];
-                                                        angaben[0] = werte[1];
-                                                        angaben[1] = werte[2];
-                                                        angaben[2] = getResources().getString(R.string.abgelaufen);
-                                                        angaben[3] = fachListe.get(Integer.valueOf(werte[4])).second;
-                                                        angaben[4] = schrankListe.get(fachListe.get(Integer.valueOf(werte[4])).first);
-                                                        ablaufend.add(angaben);
-                                                    }
-                                                }
-                                            }catch (Exception e){
-                                                e.printStackTrace();
-                                                fehler=true;
-                                            }
-                                        }
-                                        //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
-                                        // prepare intent which is triggered if the
-// notification is selected
-                                        if(!fehler) {
-                                            Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
-                                            Bundle b = new Bundle();
-                                            DataHelper helper = new DataHelper(ablaufend);
-                                            CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
-                                            //InhaltWidget.sendRefreshBroadcast(MHDCheckerService.this);
-                                            b.putSerializable("lebensmittel", helper);
-                                            intent.putExtras(b);
-// use System.currentTimeMillis() to have a unique ID for the pending intent
-                                            PendingIntent pIntent = PendingIntent.getActivity(MHDCheckerService.this, (int) System.currentTimeMillis(), intent, 0);
-
-// build notification
-// the addAction re-use the same intent to keep the example short
-                                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MHDCheckerService.this);
-                                            mBuilder.setContentTitle(getResources().getString(R.string.titel_notif))
-                                                    .setContentText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif))
-                                                    .setSmallIcon(R.mipmap.schnee)
-                                                    .setAutoCancel(false)
-                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif)));
-// Creates an explicit intent for an Activity in your app
-                                            Intent resultIntent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
-
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-                                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(MHDCheckerService.this);
-// Adds the back stack for the Intent (but not the Intent itself)
-                                            stackBuilder.addParentStack(AblaufendActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-                                            stackBuilder.addNextIntent(intent);
-                                            PendingIntent resultPendingIntent =
-                                                    stackBuilder.getPendingIntent(
-                                                            0,
-                                                            PendingIntent.FLAG_UPDATE_CURRENT
-                                                    );
-                                            mBuilder.setContentIntent(resultPendingIntent);
-                                            NotificationManager mNotificationManager =
-                                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-// mNotificationId is a unique integer your app uses to identify the
-// notification. For example, to cancel the notification, you can pass its ID
-// number to NotificationManager.cancel().
-                                            mNotificationManager.cancel(mNotificationId);
-                                            mNotificationManager.notify(mNotificationId, mBuilder.build());
                                         }
                                     }
-                                }
-                            };
-                            conn.execute("params");
+                                    } else {
+                                        String[] angaben = new String[5];
+                                        angaben[0] = lm.getName();
+                                        angaben[1] = lm.getAnzahl();
+                                        angaben[2] = getResources().getString(R.string.abgelaufen);
+                                        angaben[3] = lm.getFach().getName();
+                                        angaben[4] = lm.getFach().getKuehlschrank().getName();
+                                        ablaufend.add(angaben);
+                                    }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                fehler = true;
+                            }
+                        }
+                        //Toast.makeText(context,"Es laufen "+ablaufend.size()+" Lebensmittel ab.",Toast.LENGTH_LONG).show();
+                        // prepare intent which is triggered if the
+                        // notification is selected
+                        if (!fehler) {
+                            Intent intent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
+                            Bundle b = new Bundle();
+                            DataHelper helper = new DataHelper(ablaufend);
+                            CollectionAppWidgetProvider.sendRefreshBroadcast(MHDCheckerService.this);
+                            //InhaltWidget.sendRefreshBroadcast(MHDCheckerService.this);
+                            b.putSerializable("lebensmittel", helper);
+                            intent.putExtras(b);
+                            // use System.currentTimeMillis() to have a unique ID for the pending intent
+                            PendingIntent pIntent = PendingIntent.getActivity(MHDCheckerService.this, (int) System.currentTimeMillis(), intent, 0);
+
+                            // build notification
+                            // the addAction re-use the same intent to keep the example short
+                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MHDCheckerService.this);
+                            mBuilder.setContentTitle(getResources().getString(R.string.titel_notif))
+                                    .setContentText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif))
+                                    .setSmallIcon(R.mipmap.schnee)
+                                    .setAutoCancel(false)
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(ablaufend.size() + " " + getResources().getString(R.string.inhalt_notif)));
+                            // Creates an explicit intent for an Activity in your app
+                            Intent resultIntent = new Intent(MHDCheckerService.this, AblaufendActivity.class);
+
+                            // The stack builder object will contain an artificial back stack for the
+                            // started Activity.
+                            // This ensures that navigating backward from the Activity leads out of
+                            // your application to the Home screen.
+                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(MHDCheckerService.this);
+                            // Adds the back stack for the Intent (but not the Intent itself)
+                            stackBuilder.addParentStack(AblaufendActivity.class);
+                            // Adds the Intent that starts the Activity to the top of the stack
+                            stackBuilder.addNextIntent(intent);
+                            PendingIntent resultPendingIntent =
+                                    stackBuilder.getPendingIntent(
+                                            0,
+                                            PendingIntent.FLAG_UPDATE_CURRENT
+                                    );
+                            mBuilder.setContentIntent(resultPendingIntent);
+                            NotificationManager mNotificationManager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            // mNotificationId is a unique integer your app uses to identify the
+                            // notification. For example, to cancel the notification, you can pass its ID
+                            // number to NotificationManager.cancel().
+                            mNotificationManager.cancel(mNotificationId);
+                            mNotificationManager.notify(mNotificationId, mBuilder.build());
                         }
                     }
                 };
                 conn.execute("params");
                 handler.postDelayed(runnable, repeatMillis);
             }
-        };
 
+        };
         handler.postDelayed(runnable, 5000);
     }
+
+
+
     @Override
     public void onCreate() {
         HTTP_Connection clean = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/clean.php");

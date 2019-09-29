@@ -51,4 +51,8 @@ public class Fach {
         Fach fach = (Fach) obj;
         return fach.getlNummer() == this.getlNummer();
     }
+
+    public net.ddns.worldofjarcraft.kappa.Model.Kuehlschrank getKuehlschrank() {
+        return Kuehlschrank;
+    }
 }
