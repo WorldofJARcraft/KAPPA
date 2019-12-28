@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
@@ -51,7 +50,6 @@ public class MHDCheckerService extends Service {
     public static Runnable runnable = null;
     private final int mNotificationId =0;
     private final int repeatMillis = 1000*60;
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
