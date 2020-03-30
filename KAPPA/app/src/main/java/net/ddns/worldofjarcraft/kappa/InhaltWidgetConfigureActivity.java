@@ -3,30 +3,19 @@ package net.ddns.worldofjarcraft.kappa;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ScrollingTabContainerView;
+
+import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.ScrollingTabContainerView;
 import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RemoteViews;
-import android.widget.Space;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -34,13 +23,7 @@ import net.ddns.worldofjarcraft.kappa.Model.Fach;
 import net.ddns.worldofjarcraft.kappa.Model.Kuehlschrank;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-
-import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
-import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
-import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
 
 /**
  * The configuration screen for the {@link InhaltWidget InhaltWidget} AppWidget.

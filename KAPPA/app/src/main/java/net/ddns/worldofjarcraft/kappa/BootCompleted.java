@@ -2,17 +2,13 @@ package net.ddns.worldofjarcraft.kappa;
 
 import android.content.Context;
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import androidx.appcompat.app.AlertDialog;
 
 import static android.content.Context.MODE_PRIVATE;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.autostart_name;
 import static net.ddns.worldofjarcraft.kappa.LaunchActivity.login_name;
-import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_password;
-import static net.ddns.worldofjarcraft.kappa.LaunchActivity.user_preference;
 
 // here is the OnRevieve methode which will be called when boot completed
 public class BootCompleted extends BroadcastReceiver{

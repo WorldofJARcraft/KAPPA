@@ -2,36 +2,26 @@ package net.ddns.worldofjarcraft.kappa;
 
 import android.app.Activity;
 
-import android.app.ActionBar;
 import android.app.DatePickerDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
-import android.util.Pair;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.view.ViewParent;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -51,15 +41,10 @@ import net.ddns.worldofjarcraft.kappa.Model.Fach;
 import net.ddns.worldofjarcraft.kappa.Model.Lebensmittel;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-
-import static android.os.Build.VERSION_CODES.M;
-import static net.ddns.worldofjarcraft.kappa.R.id.lebensmittel;
-import static net.ddns.worldofjarcraft.kappa.R.id.space2;
 
 public class InhaltActivity extends Activity {
 
