@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -197,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("Antwort \""+output+"\" von \""+url+"\"");
                 ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
                 prog.setVisibility(View.GONE);
-                if(output.equals("Erfolg")){
+                if(output.equals("OK")){
                     data.mail=null;
                     data.pw=null;
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -215,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-                else if (output.equals("User existiert nicht.")){
+                else if (!output.isEmpty()){
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage(R.string.user_nicht_da);
                     DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
@@ -227,32 +229,61 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setPositiveButton("OK",posListener);
                     builder.show();
                 }
-                else{
-                    Toast.makeText(LoginActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
-                }
             }
         };
         EditText mail = (EditText) findViewById(R.id.mail);
-        final  String email = mail.getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.forgot_PW);
         builder.setMessage(R.string.neues_PW);
 // Set up the input
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
+        final LinearLayout inputs = new LinearLayout(this);
+        inputs.setOrientation(LinearLayout.VERTICAL);
+        TextView EMailLabel = new TextView(this);
+        EMailLabel.setText(R.string.Email);
+        inputs.addView(EMailLabel);
+
+        final EditText emailInput = new EditText(this);
+        emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        inputs.addView(emailInput);
+
+        TextView PasswordLabel = new TextView(this);
+        PasswordLabel.setText(R.string.neues_PW_Label);
+        inputs.addView(PasswordLabel);
+
+        final EditText pwInput = new EditText(this);
+        pwInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        inputs.addView(pwInput);
+
+        TextView RepeatPasswordLabel = new TextView(this);
+        RepeatPasswordLabel.setText(R.string.neues_PW_Wiederholung_Label);
+        inputs.addView(RepeatPasswordLabel);
+
+        final EditText pwRepeatInput = new EditText(this);
+        pwRepeatInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        inputs.addView(pwRepeatInput);
+
+        builder.setView(inputs);
+
 
 // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                passwort = input.getText().toString();
-                HTTP_Connection login = new HTTP_Connection("https://worldofjarcraft.ddns.net/kappa/reset_PW.php?mail="+email+"&pw="+passwort+"",2);
-                login.delegate = response;
-                login.execute();
-                ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
-                prog.setVisibility(View.VISIBLE);
-                dialog.dismiss();
+                String emailNewINput = emailInput.getText().toString();
+                passwort = pwInput.getText().toString();
+                String repeatedPW = pwRepeatInput.getText().toString();
+
+                if(!repeatedPW.equals(passwort)){
+                    Toast.makeText(LoginActivity.this, R.string.neues_PW_Wiederholung_falsch, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    HTTP_Connection login = new HTTP_Connection(Constants.Server_Adress + "/user/requestReset?email=" + emailNewINput + "&newPassword=" + passwort, 2);
+                    login.delegate = response;
+                    login.execute();
+                    ProgressBar prog = (ProgressBar) findViewById(R.id.progress);
+                    prog.setVisibility(View.VISIBLE);
+                    dialog.dismiss();
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

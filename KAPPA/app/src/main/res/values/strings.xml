@@ -207,4 +207,7 @@
     <string name="kann_nicht_aktualisieren">Das Widget kann nicht aktualisiert werden, da Ihr Benutzername und/oder Ihr Passwort nicht gültig ist. Bitte öffnen Sie die App KAPPA und melden sich erneut an.</string>
     <string name="eingelagert_am">eingelagert am:</string>
     <string name="keine_lm">Es wurden keine ablaufenden Lebensmittel gefunden. Dabei kann es sich allerdings auch um einen Fehler handeln.</string>
+    <string name="neues_PW_Label">Neues Passwort:</string>
+    <string name="neues_PW_Wiederholung_Label">Neues Passwort wiederholen:</string>
+    <string name="neues_PW_Wiederholung_falsch">Passwörter stimmen nicht überein!</string>
 </resources>
