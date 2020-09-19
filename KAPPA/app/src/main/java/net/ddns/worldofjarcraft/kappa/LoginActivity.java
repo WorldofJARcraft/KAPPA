@@ -9,7 +9,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -243,7 +245,6 @@ public class LoginActivity extends AppCompatActivity {
         inputs.addView(EMailLabel);
 
         final EditText emailInput = new EditText(this);
-        emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         inputs.addView(emailInput);
 
         TextView PasswordLabel = new TextView(this);
@@ -251,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
         inputs.addView(PasswordLabel);
 
         final EditText pwInput = new EditText(this);
-        pwInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        pwInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
         inputs.addView(pwInput);
 
         TextView RepeatPasswordLabel = new TextView(this);
@@ -259,7 +260,7 @@ public class LoginActivity extends AppCompatActivity {
         inputs.addView(RepeatPasswordLabel);
 
         final EditText pwRepeatInput = new EditText(this);
-        pwRepeatInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        pwRepeatInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
         inputs.addView(pwRepeatInput);
 
         builder.setView(inputs);
